@@ -31,7 +31,7 @@ public class ParticipantType extends ReceiveModel {
         try {
             Long remoteId = jsonObject.getLong("id");
             
-            // If an option already exists, update it from the remote
+            // If a ParticipantType already exists, update it from the remote
             ParticipantType participantType = ParticipantType.findByRemoteId(remoteId);
             if (participantType == null) {
                 participantType = this;
