@@ -27,6 +27,10 @@ public class Property extends ReceiveModel {
     @Column(name = "ParticipantType")
     private ParticipantType mParticipantType;
     
+    public Property() {
+        super();
+    }
+    
     @Override
     public void createObjectFromJSON(JSONObject jsonObject) {
         try {
