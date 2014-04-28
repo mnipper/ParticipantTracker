@@ -57,6 +57,10 @@ public class ParticipantType extends ReceiveModel {
         return new Select().from(ParticipantType.class).where("RemoteId = ?", id).executeSingle();
     }
     
+    public static int getCount() {
+        return getAll().size();
+    }
+    
     /*
      * Getters / Setters
      */
@@ -69,7 +73,7 @@ public class ParticipantType extends ReceiveModel {
         return mRemoteId;
     }
     
-    private void setLabel(String label) {
+    public void setLabel(String label) {
         mLabel = label;
     }
     

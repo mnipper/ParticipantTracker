@@ -2,6 +2,8 @@ package org.adaptlab.chpir.android.participanttracker;
 
 import java.util.Locale;
 
+import org.adaptlab.chpir.android.models.ParticipantType;
+
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -9,12 +11,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -40,6 +39,9 @@ public class ParticipantListActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        AppUtil.appInit();
+        
         setContentView(R.layout.activity_participant_list);
 
         // Set up the action bar.
@@ -127,20 +129,14 @@ public class ParticipantListActivity extends FragmentActivity implements
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return ParticipantType.getCount();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
-            switch (position) {
-            case 0:
-                return getString(R.string.title_section1).toUpperCase(l);
-            case 1:
-                return getString(R.string.title_section2).toUpperCase(l);
-            case 2:
-                return getString(R.string.title_section3).toUpperCase(l);
+            if (position >= 0 && position < ParticipantType.getCount()) {
+                return ParticipantType.getAll().get(position).getLabel();
             }
             return null;
         }
