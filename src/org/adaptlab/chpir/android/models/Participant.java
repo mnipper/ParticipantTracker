@@ -1,5 +1,7 @@
 package org.adaptlab.chpir.android.models;
 
+import java.util.UUID;
+
 import org.adaptlab.chpir.android.activerecordcloudsync.SendModel;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,10 +19,13 @@ public class Participant extends SendModel {
     private boolean mSent;
     @Column(name = "ParticipantType")
     private ParticipantType mParticipantType;
+    @Column(name = "UUID")
+    private String mUUID;
     
     public Participant(ParticipantType participantType) {
         super();
         mParticipantType = participantType;
+        mUUID = UUID.randomUUID().toString();
     }
 
     @Override
@@ -31,6 +36,7 @@ public class Participant extends SendModel {
             JSONObject jsonObject = new JSONObject();
             // TODO: Change to participant id
             jsonObject.put("participant_type_id", getParticipantType().getRemoteId());
+            jsonObject.put("uuid", getUUID());
             
             json.put("participant", jsonObject);
         } catch (JSONException je) {
@@ -41,6 +47,10 @@ public class Participant extends SendModel {
     
     public ParticipantType getParticipantType() {
         return mParticipantType;
+    }
+    
+    public String getUUID() {
+        return mUUID;
     }
 
     @Override
