@@ -1,5 +1,6 @@
 package org.adaptlab.chpir.android.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.SendModel;
@@ -10,6 +11,7 @@ import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 
 @Table(name = "Participant")
 public class Participant extends SendModel {
@@ -51,6 +53,18 @@ public class Participant extends SendModel {
     
     public String getUUID() {
         return mUUID;
+    }
+    
+    public static List<Participant> getAll() {
+        return new Select().from(Participant.class).orderBy("Id ASC").execute();
+    }
+    
+    public static List<Participant> getAllByParticipantType(ParticipantType participantType) {
+        return new Select().from(Participant.class).where("ParticipantType = ?", participantType.getId()).execute();
+    }
+    
+    public static int getCount() {
+        return getAll().size();
     }
 
     @Override

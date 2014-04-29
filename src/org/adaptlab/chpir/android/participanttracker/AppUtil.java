@@ -1,6 +1,9 @@
 package org.adaptlab.chpir.android.participanttracker;
 
+import org.adaptlab.chpir.android.models.Participant;
+import org.adaptlab.chpir.android.models.ParticipantProperty;
 import org.adaptlab.chpir.android.models.ParticipantType;
+import org.adaptlab.chpir.android.models.Property;
 
 public class AppUtil {
     
@@ -10,15 +13,22 @@ public class AppUtil {
     
     public static void seedDb() {
         if (ParticipantType.getCount() == 0) {
-            ParticipantType p = new ParticipantType();
-            p.setLabel("Child");
-            p.save();
-            p = new ParticipantType();
-            p.setLabel("Caregiver");
-            p.save();
-            p = new ParticipantType();
-            p.setLabel("Center");
-            p.save();
+            String[] dummyParticipantTypes = {"Child", "Caregiver", "Center"};
+            for (String participantType : dummyParticipantTypes) {
+                ParticipantType p = new ParticipantType();
+                p.setLabel(participantType);
+                p.save();                
+            }
+        }
+        
+        if (Participant.getCount() == 0) {
+            for (ParticipantType participantType : ParticipantType.getAll()) {
+                Property property = new Property("name", Property.PropertyType.STRING, true, participantType);
+                for (int i = 0; i < 4; i++) {
+                    Participant participant = new Participant(participantType);
+                    new ParticipantProperty(participant, property, participantType + " " + i);           
+                }
+            }
         }
     }
 }

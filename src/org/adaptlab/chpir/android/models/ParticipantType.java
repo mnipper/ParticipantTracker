@@ -73,6 +73,11 @@ public class ParticipantType extends ReceiveModel {
         return mRemoteId;
     }
     
+    @Override
+    public String toString() {
+        return getLabel();
+    }
+    
     public void setLabel(String label) {
         mLabel = label;
     }
