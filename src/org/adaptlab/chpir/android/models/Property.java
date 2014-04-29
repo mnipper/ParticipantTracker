@@ -15,13 +15,15 @@ import com.activeandroid.query.Select;
 @Table(name = "Property")
 public class Property extends ReceiveModel {
     private static final String TAG = "Property";
+    
+    public static enum PropertyType {STRING, DATE, INTEGER};
 
     @Column(name = "RemoteId")
     private Long mRemoteId;
     @Column(name = "Label")
     private String mLabel;
     @Column(name = "TypeOf")
-    private String mTypeOf;
+    private PropertyType mTypeOf;
     @Column(name = "Required")
     private boolean mRequired;
     @Column(name = "ParticipantType")
@@ -29,6 +31,14 @@ public class Property extends ReceiveModel {
     
     public Property() {
         super();
+    }
+    
+    public Property(String label, PropertyType typeOf, boolean required, ParticipantType participantType) {
+        super();
+        setLabel(label);
+        setTypeOf(typeOf);
+        setRequired(required);
+        setParticipantType(participantType);
     }
     
     @Override
@@ -76,7 +86,7 @@ public class Property extends ReceiveModel {
         return mRemoteId;
     }
     
-    public String getTypeOf() {
+    public PropertyType getTypeOf() {
         return mTypeOf;
     }
     
@@ -97,7 +107,11 @@ public class Property extends ReceiveModel {
     }
     
     private void setTypeOf(String typeOf) {
-        mTypeOf = typeOf;
+        mTypeOf = PropertyType.valueOf(typeOf);
+    }
+    
+    private void setTypeOf(PropertyType propertyType) {
+        mTypeOf = propertyType;
     }
     
     private void setRequired(boolean required) {
