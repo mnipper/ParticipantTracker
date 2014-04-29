@@ -17,7 +17,7 @@ public class AppUtil {
             for (String participantType : dummyParticipantTypes) {
                 ParticipantType p = new ParticipantType();
                 p.setLabel(participantType);
-                p.save();                
+                p.save();
             }
         }
         

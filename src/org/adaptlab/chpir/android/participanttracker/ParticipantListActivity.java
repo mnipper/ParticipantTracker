@@ -2,6 +2,7 @@ package org.adaptlab.chpir.android.participanttracker;
 
 import java.util.Locale;
 
+import org.adaptlab.chpir.android.models.Participant;
 import org.adaptlab.chpir.android.models.ParticipantType;
 
 import android.app.ActionBar;
@@ -122,7 +123,7 @@ public class ParticipantListActivity extends FragmentActivity implements
             // below) with the page number as its lone argument.
             Fragment fragment = new DummySectionFragment();
             Bundle args = new Bundle();
-            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position);
             fragment.setArguments(args);
             return fragment;
         }

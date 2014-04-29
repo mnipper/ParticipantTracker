@@ -66,6 +66,10 @@ public class Participant extends SendModel {
     public static int getCount() {
         return getAll().size();
     }
+    
+    public static int getCountByParticipantType(ParticipantType participantType) {
+        return getAllByParticipantType(participantType).size();
+    }
 
     @Override
     public boolean isSent() {

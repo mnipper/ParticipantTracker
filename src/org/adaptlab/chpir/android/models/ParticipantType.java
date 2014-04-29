@@ -19,6 +19,8 @@ public class ParticipantType extends ReceiveModel {
     
     @Column(name = "Label")
     private String mLabel;
+    @Column(name = "LabelProperty")
+    private Property mLabelProperty;
     @Column(name = "RemoveId")
     private Long mRemoteId;
     
