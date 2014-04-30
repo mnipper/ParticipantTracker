@@ -18,7 +18,7 @@ public class Property extends ReceiveModel {
     
     public static enum PropertyType {STRING, DATE, INTEGER};
 
-    @Column(name = "RemoteId")
+    @Column(name = "RemoteId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long mRemoteId;
     @Column(name = "Label")
     private String mLabel;

@@ -15,6 +15,9 @@ public class AppUtil {
     }
     
     public static void seedDb() {
+        
+        Log.i(TAG, "Seeding db...");
+        
         if (ParticipantType.getCount() == 0) {
             String[] dummyParticipantTypes = {"Child", "Caregiver", "Center"};
             for (String participantType : dummyParticipantTypes) {
@@ -27,9 +30,15 @@ public class AppUtil {
         if (Participant.getCount() == 0) {
             for (ParticipantType participantType : ParticipantType.getAll()) {
                 Property property = new Property("name", Property.PropertyType.STRING, true, participantType);
-                for (int i = 0; i < 4; i++) {
+                property.save();
+                
+                participantType.setLabelProperty(property);
+                participantType.save();
+                
+                for (int i = 0; i < 4; i++) {  
                     Participant participant = new Participant(participantType);
                     participant.save();
+                    Log.i(TAG, "Participants: " + Participant.getCount());
                     ParticipantProperty participantProperty = new ParticipantProperty(participant, property, participantType + " " + i); 
                     participantProperty.save();
                 }

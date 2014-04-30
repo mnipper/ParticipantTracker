@@ -26,6 +26,10 @@ public class ParticipantProperty extends SendModel {
     @Column(name = "UUID")
     private String mUUID;
     
+    public ParticipantProperty() {
+        super();
+    }
+    
     public ParticipantProperty(Participant participant, Property property, String value) {
         super();
         mSent = false;

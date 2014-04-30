@@ -162,8 +162,7 @@ public class ParticipantListActivity extends FragmentActivity implements
          */
         public static final String ARG_SECTION_NUMBER = "section_number";
         
-        public ParticipantListFragment() {
-            
+        public ParticipantListFragment() {          
         }
         
         @Override
@@ -185,7 +184,7 @@ public class ParticipantListActivity extends FragmentActivity implements
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             Participant participant = ((ParticipantAdapter) getListAdapter()).getItem(position);
-            Intent i = new Intent();
+            Intent i = new Intent(getActivity(), ParticipantDetailActivity.class);
             i.putExtra(ParticipantDetailFragment.EXTRA_PARTICIPANT_ID, participant.getId());
             startActivity(i);
         }   
@@ -217,7 +216,7 @@ public class ParticipantListActivity extends FragmentActivity implements
             
             TextView titleTextView = (TextView) convertView
                     .findViewById(R.id.participant_list_item_titleTextView);
-            titleTextView.setText(participant.toString());
+            titleTextView.setText(participant.getLabel());
             
             return convertView;
         }

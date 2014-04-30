@@ -24,10 +24,15 @@ public class Participant extends SendModel {
     @Column(name = "UUID")
     private String mUUID;
     
+    public Participant() {
+        super();
+    }
+    
     public Participant(ParticipantType participantType) {
         super();
         mParticipantType = participantType;
         mUUID = UUID.randomUUID().toString();
+        mSent = false;
     }
 
     @Override
@@ -74,6 +79,10 @@ public class Participant extends SendModel {
     public static Participant findById(Long id) {
         return new Select().from(Participant.class).where("Id = ?", id).executeSingle();
     }
+    
+    public List<ParticipantProperty> getParticipantProperties() {
+        return new Select().from(ParticipantProperty.class).where("Participant = ?", getId()).execute();
+    }
 
     @Override
     public boolean isSent() {
@@ -82,11 +91,21 @@ public class Participant extends SendModel {
 
     @Override
     public boolean readyToSend() {
-        return true;
+        return false;
     }
 
     @Override
     public void setAsSent() {
         mSent = true;
+    }
+    
+    public String getLabel() {
+        for (ParticipantProperty participantProperty : getParticipantProperties()) {
+            if (participantProperty.getProperty() == getParticipantType().getLabelProperty()) {
+                return participantProperty.getValue();
+            }
+        }
+        
+        return mUUID;
     }
 }
