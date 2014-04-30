@@ -70,6 +70,10 @@ public class Participant extends SendModel {
     public static int getCountByParticipantType(ParticipantType participantType) {
         return getAllByParticipantType(participantType).size();
     }
+    
+    public static Participant findById(Long id) {
+        return new Select().from(Participant.class).where("Id = ?", id).executeSingle();
+    }
 
     @Override
     public boolean isSent() {

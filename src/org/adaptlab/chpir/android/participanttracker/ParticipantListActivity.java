@@ -2,7 +2,6 @@ package org.adaptlab.chpir.android.participanttracker;
 
 import java.util.Locale;
 
-import org.adaptlab.chpir.android.models.Participant;
 import org.adaptlab.chpir.android.models.ParticipantType;
 
 import android.app.ActionBar;
