@@ -1,7 +1,5 @@
 package org.adaptlab.chpir.android.participanttracker;
 
-
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 
 public class ParticipantDetailActivity extends SingleFragmentActivity {

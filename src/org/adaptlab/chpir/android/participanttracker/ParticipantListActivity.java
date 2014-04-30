@@ -169,7 +169,6 @@ public class ParticipantListActivity extends FragmentActivity implements
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);           
             setListAdapter(new ParticipantAdapter(getActivity(), Participant.getAll()));
-            Log.i(TAG, Participant.getAll() + "");
         }
 
         @Override
