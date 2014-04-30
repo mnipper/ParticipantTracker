@@ -1,21 +1,31 @@
 package org.adaptlab.chpir.android.participanttracker;
 
+import java.util.List;
 import java.util.Locale;
 
+import org.adaptlab.chpir.android.models.Participant;
 import org.adaptlab.chpir.android.models.ParticipantType;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class ParticipantListActivity extends FragmentActivity implements
@@ -117,12 +127,9 @@ public class ParticipantListActivity extends FragmentActivity implements
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a DummySectionFragment (defined as a static inner class
-            // below) with the page number as its lone argument.
-            Fragment fragment = new DummySectionFragment();
+            Fragment fragment = new ParticipantListFragment();
             Bundle args = new Bundle();
-            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position);
+            args.putInt(ParticipantListFragment.ARG_SECTION_NUMBER, position);
             fragment.setArguments(args);
             return fragment;
         }
@@ -146,14 +153,24 @@ public class ParticipantListActivity extends FragmentActivity implements
      * A dummy fragment representing a section of the app, but that simply
      * displays dummy text.
      */
-    public static class DummySectionFragment extends Fragment {
+    public static class ParticipantListFragment extends ListFragment {
+        private static final String TAG = "ParticipantListFragment";
+        
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
         public static final String ARG_SECTION_NUMBER = "section_number";
-
-        public DummySectionFragment() {
+        
+        public ParticipantListFragment() {
+            
+        }
+        
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);           
+            setListAdapter(new ParticipantAdapter(getActivity(), Participant.getAll()));
+            Log.i(TAG, Participant.getAll() + "");
         }
 
         @Override
@@ -161,11 +178,48 @@ public class ParticipantListActivity extends FragmentActivity implements
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(
                     R.layout.fragment_participant_list_dummy, container, false);
-            TextView dummyTextView = (TextView) rootView
-                    .findViewById(R.id.section_label);
-            dummyTextView.setText(Integer.toString(getArguments().getInt(
-                    ARG_SECTION_NUMBER)));
+
             return rootView;
+        }
+        
+        @Override
+        public void onListItemClick(ListView l, View v, int position, long id) {
+            Participant participant = ((ParticipantAdapter) getListAdapter()).getItem(position);
+            Intent i = new Intent();
+            i.putExtra(ParticipantDetailFragment.EXTRA_PARTICIPANT_ID, participant.getId());
+            startActivity(i);
+        }   
+        
+        @Override
+        public void onResume() {
+            super.onResume();
+            ((BaseAdapter) getListAdapter()).notifyDataSetChanged();
+        }
+
+    }
+    
+    private static class ParticipantAdapter extends ArrayAdapter<Participant> {
+        private Context mContext;
+        
+        public ParticipantAdapter(Context context, List<Participant> participants) {
+            super(context, 0, participants);
+            mContext = context;
+        }
+               
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = ((Activity) mContext).getLayoutInflater().inflate(
+                        R.layout.list_item_participant, null);
+            }
+            
+            Participant participant = getItem(position);
+            
+            TextView titleTextView = (TextView) convertView
+                    .findViewById(R.id.participant_list_item_titleTextView);
+            titleTextView.setText(participant.toString());
+            
+            return convertView;
         }
     }
 

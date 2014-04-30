@@ -5,7 +5,10 @@ import org.adaptlab.chpir.android.models.ParticipantProperty;
 import org.adaptlab.chpir.android.models.ParticipantType;
 import org.adaptlab.chpir.android.models.Property;
 
+import android.util.Log;
+
 public class AppUtil {
+    private static final String TAG = "AppUtil";
     
     public static final void appInit() {
         seedDb();
@@ -26,7 +29,9 @@ public class AppUtil {
                 Property property = new Property("name", Property.PropertyType.STRING, true, participantType);
                 for (int i = 0; i < 4; i++) {
                     Participant participant = new Participant(participantType);
-                    new ParticipantProperty(participant, property, participantType + " " + i);           
+                    participant.save();
+                    ParticipantProperty participantProperty = new ParticipantProperty(participant, property, participantType + " " + i); 
+                    participantProperty.save();
                 }
             }
         }
