@@ -167,8 +167,16 @@ public class ParticipantListActivity extends FragmentActivity implements
         
         @Override
         public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);           
-            setListAdapter(new ParticipantAdapter(getActivity(), Participant.getAll()));
+            super.onCreate(savedInstanceState);
+        }
+        
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            int participantTypeId = getArguments().getInt(ARG_SECTION_NUMBER, 0);
+            ParticipantType participantType = ParticipantType.getAll().get(participantTypeId);
+            List<Participant> participants = Participant.getAllByParticipantType(participantType);
+            setListAdapter(new ParticipantAdapter(getActivity(), participants));
         }
 
         @Override
