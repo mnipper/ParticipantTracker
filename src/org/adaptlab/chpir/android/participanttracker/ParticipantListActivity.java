@@ -6,6 +6,8 @@ import java.util.Locale;
 import org.adaptlab.chpir.android.models.Participant;
 import org.adaptlab.chpir.android.models.ParticipantType;
 
+import com.activeandroid.ActiveAndroid;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -30,6 +32,7 @@ import android.widget.TextView;
 
 public class ParticipantListActivity extends FragmentActivity implements
         ActionBar.TabListener {
+    private static final String TAG = "ParticipantListActivity";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -49,9 +52,8 @@ public class ParticipantListActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         AppUtil.appInit();
-        
+
         setContentView(R.layout.activity_participant_list);
 
         // Set up the action bar.
@@ -201,7 +203,6 @@ public class ParticipantListActivity extends FragmentActivity implements
             super.onResume();
             ((BaseAdapter) getListAdapter()).notifyDataSetChanged();
         }
-
     }
     
     private static class ParticipantAdapter extends ArrayAdapter<Participant> {
@@ -228,5 +229,4 @@ public class ParticipantListActivity extends FragmentActivity implements
             return convertView;
         }
     }
-
 }

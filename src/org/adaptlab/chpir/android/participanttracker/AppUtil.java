@@ -5,10 +5,13 @@ import org.adaptlab.chpir.android.models.ParticipantProperty;
 import org.adaptlab.chpir.android.models.ParticipantType;
 import org.adaptlab.chpir.android.models.Property;
 
+import com.activeandroid.ActiveAndroid;
+
 import android.util.Log;
 
 public class AppUtil {
     private static final String TAG = "AppUtil";
+    private static final boolean SEED_DB = false;
     
     public static final void appInit() {
         seedDb();
@@ -16,33 +19,39 @@ public class AppUtil {
     
     public static void seedDb() {
         
-        Log.i(TAG, "Seeding db...");
-        
-        if (ParticipantType.getCount() == 0) {
+        if (SEED_DB) {
             String[] dummyParticipantTypes = {"Child", "Caregiver", "Center"};
             for (String participantType : dummyParticipantTypes) {
-                ParticipantType p = new ParticipantType();
-                p.setLabel(participantType);
-                p.save();
+                ActiveAndroid.beginTransaction();
+                try {
+                    ParticipantType p = new ParticipantType();
+                    p.setLabel(participantType);
+                    p.save();
+                    ActiveAndroid.setTransactionSuccessful();
+                }
+                finally {
+                    ActiveAndroid.endTransaction();
+                }
             }
-        }
-        
-        if (Participant.getCount() == 0) {
+            
+            
+
             for (ParticipantType participantType : ParticipantType.getAll()) {
                 Property property = new Property("name", Property.PropertyType.STRING, true, participantType);
-                property.save();
                 
                 participantType.setLabelProperty(property);
                 participantType.save();
+                property.save();
                 
                 for (int i = 0; i < 4; i++) {  
                     Participant participant = new Participant(participantType);
                     participant.save();
-                    Log.i(TAG, "Participants: " + Participant.getCount());
+                    
                     ParticipantProperty participantProperty = new ParticipantProperty(participant, property, participantType + " " + i); 
                     participantProperty.save();
-                }
-            }
+                } 
+            } 
         }
+        
     }
 }

@@ -60,7 +60,7 @@ public class ParticipantType extends ReceiveModel {
     }
     
     public static int getCount() {
-        return getAll().size();
+       return getAll().size();
     }
     
     /*

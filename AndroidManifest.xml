@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme"
         android:name="com.activeandroid.app.Application"  >
         <activity
-            android:name="org.adaptlab.chpir.android.participanttracker.ParticipantListActivity"
+            android:name=".ParticipantListActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
