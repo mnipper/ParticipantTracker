@@ -11,5 +11,6 @@
     <string name="network_unavailable">No network available on the device.</string> 
     <string name="api_unavailable">Remote api is not responsive.</string>   
     <string name="unacceptable_version_code">You must upgrade your application before continuing.</string>   
-    <string name="new_participant_prefix">New&#160;</string>  
+    <string name="new_participant_prefix">New&#160;</string> 
+    <string name="save_participant">Save Participant</string> 
 </resources>

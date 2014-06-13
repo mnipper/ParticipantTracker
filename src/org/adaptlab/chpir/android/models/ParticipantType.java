@@ -3,7 +3,6 @@ package org.adaptlab.chpir.android.models;
 import java.util.List;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.ReceiveModel;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +60,14 @@ public class ParticipantType extends ReceiveModel {
     
     public static int getCount() {
        return getAll().size();
+    }
+    
+    public static ParticipantType findById(Long id) {
+        return new Select().from(ParticipantType.class).where("Id = ?", id).executeSingle();
+    }
+    
+    public List<Property> getProperties() {
+        return Property.getAllByParticipantType(this);
     }
     
     /*

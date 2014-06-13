@@ -75,6 +75,10 @@ public class Property extends ReceiveModel {
         return new Select().from(Property.class).where("RemoteId = ?", id).executeSingle();
     }
     
+    public static List<Property> getAllByParticipantType(ParticipantType participantType) {
+        return new Select().from(Property.class).where("ParticipantType = ?", participantType.getId()).execute();
+    }
+    
     /*
      * Getters / Setters
      */

@@ -187,6 +187,13 @@ public class ParticipantListActivity extends FragmentActivity implements
             
             mNewParticipantButton = (Button) rootView.findViewById(R.id.new_participant_button);            
             mNewParticipantButton.setText(getString(R.string.new_participant_prefix) + getParticipantType().getLabel());
+            mNewParticipantButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), NewParticipantActivity.class);
+                    i.putExtra(NewParticipantFragment.EXTRA_PARTICIPANT_TYPE_ID, getParticipantType().getId());
+                    startActivity(i);
+                }
+            });
 
             return rootView;
         }

@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ParticipantDetailActivity" />
+        <activity android:name=".NewParticipantActivity" />
         <meta-data android:name="AA_DB_NAME" android:value="Tracking.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="1" />   
     </application>
