@@ -6,8 +6,6 @@ import java.util.Locale;
 import org.adaptlab.chpir.android.models.Participant;
 import org.adaptlab.chpir.android.models.ParticipantType;
 
-import com.activeandroid.ActiveAndroid;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -27,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,7 +41,7 @@ public class ParticipantListActivity extends FragmentActivity implements
      * intensive, it may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -163,6 +162,7 @@ public class ParticipantListActivity extends FragmentActivity implements
          * fragment.
          */
         public static final String ARG_SECTION_NUMBER = "section_number";
+        private Button mNewParticipantButton;
         
         public ParticipantListFragment() {          
         }
@@ -175,9 +175,7 @@ public class ParticipantListActivity extends FragmentActivity implements
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            int participantTypeId = getArguments().getInt(ARG_SECTION_NUMBER, 0);
-            ParticipantType participantType = ParticipantType.getAll().get(participantTypeId);
-            List<Participant> participants = Participant.getAllByParticipantType(participantType);
+            List<Participant> participants = Participant.getAllByParticipantType(getParticipantType());
             setListAdapter(new ParticipantAdapter(getActivity(), participants));
         }
 
@@ -186,6 +184,9 @@ public class ParticipantListActivity extends FragmentActivity implements
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(
                     R.layout.fragment_participant_list_dummy, container, false);
+            
+            mNewParticipantButton = (Button) rootView.findViewById(R.id.new_participant_button);            
+            mNewParticipantButton.setText(getString(R.string.new_participant_prefix) + getParticipantType().getLabel());
 
             return rootView;
         }
@@ -202,6 +203,12 @@ public class ParticipantListActivity extends FragmentActivity implements
         public void onResume() {
             super.onResume();
             ((BaseAdapter) getListAdapter()).notifyDataSetChanged();
+        }
+        
+        private ParticipantType getParticipantType() {
+            int participantTypeId = getArguments().getInt(ARG_SECTION_NUMBER, 0);
+            ParticipantType participantType = ParticipantType.getAll().get(participantTypeId);
+            return participantType;
         }
     }
     

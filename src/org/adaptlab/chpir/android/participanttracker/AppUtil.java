@@ -17,8 +17,7 @@ public class AppUtil {
         seedDb();
     }
     
-    public static void seedDb() {
-        
+    public static void seedDb() {        
         if (SEED_DB) {
             String[] dummyParticipantTypes = {"Child", "Caregiver", "Center"};
             for (String participantType : dummyParticipantTypes) {
@@ -34,20 +33,19 @@ public class AppUtil {
                 }
             }
             
-            
-
             for (ParticipantType participantType : ParticipantType.getAll()) {
-                Property property = new Property("name", Property.PropertyType.STRING, true, participantType);
+                Property nameProperty = new Property("name", Property.PropertyType.STRING, true, participantType);           
+                Property ageProperty = new Property("name", Property.PropertyType.INTEGER, true, participantType);  
+                participantType.setLabelProperty(nameProperty);
                 
-                participantType.setLabelProperty(property);
                 participantType.save();
-                property.save();
+                nameProperty.save();
                 
                 for (int i = 0; i < 4; i++) {  
                     Participant participant = new Participant(participantType);
                     participant.save();
                     
-                    ParticipantProperty participantProperty = new ParticipantProperty(participant, property, participantType + " " + i); 
+                    ParticipantProperty participantProperty = new ParticipantProperty(participant, nameProperty, participantType + " " + i); 
                     participantProperty.save();
                 } 
             } 
