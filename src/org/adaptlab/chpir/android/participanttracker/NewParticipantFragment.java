@@ -7,7 +7,6 @@ import org.adaptlab.chpir.android.models.ParticipantProperty;
 import org.adaptlab.chpir.android.models.ParticipantType;
 import org.adaptlab.chpir.android.models.Property;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;

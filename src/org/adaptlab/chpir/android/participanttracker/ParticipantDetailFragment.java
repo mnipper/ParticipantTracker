@@ -2,7 +2,11 @@ package org.adaptlab.chpir.android.participanttracker;
 
 import org.adaptlab.chpir.android.models.Participant;
 import org.adaptlab.chpir.android.models.ParticipantProperty;
+import org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,10 +26,12 @@ public class ParticipantDetailFragment extends Fragment {
     private Participant mParticipant;
     private LinearLayout mParticipantPropertiesContainer;
     private Button mNewSurveyButton;
+    private static Activity mActivity;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = getActivity();
         
         if (savedInstanceState != null) {
             mParticipant = Participant.findById(savedInstanceState.getLong(EXTRA_PARTICIPANT_ID));
@@ -34,7 +40,6 @@ public class ParticipantDetailFragment extends Fragment {
             if (participantId == -1) return;
 
             mParticipant = Participant.findById(participantId);
-            Log.i(TAG, String.valueOf(mParticipant));
         }
     }
     
@@ -57,11 +62,28 @@ public class ParticipantDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
-                i.setAction("org.adaptlab.chpir.android.survey.get_instrument_list");
-                getActivity().getApplicationContext().sendBroadcast(i);        
+                i.setAction(InstrumentListReceiver.GET_INSTRUMENT_LIST);
+                getActivity().getApplicationContext().sendBroadcast(i);       
             }
         });
         
         return v;
+    }
+    
+    public static void displayInstrumentPicker(String[] instrumentTitleList, final long[] instrumentIdList) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+        builder.setTitle("Choose something");
+        builder.setSingleChoiceItems(instrumentTitleList, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {             
+                Intent i = new Intent();
+                i.setAction(InstrumentListReceiver.START_SURVEY);
+                i.putExtra(InstrumentListReceiver.START_SURVEY_INSTRUMENT_ID, instrumentIdList[which]);
+                mActivity.sendBroadcast(i);
+                mActivity.finish();
+            }
+        }); 
+        
+        builder.show();
     }
 }

@@ -237,8 +237,7 @@ public class ParticipantListActivity extends FragmentActivity implements
             
             Participant participant = getItem(position);
             
-            TextView titleTextView = (TextView) convertView.findViewById(R.id.participant_list_item_titleTextView);
-            
+            TextView titleTextView = (TextView) convertView.findViewById(R.id.participant_list_item_titleTextView);           
             titleTextView.setText(participant.getLabel());
             
             return convertView;
