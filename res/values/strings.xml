@@ -13,4 +13,5 @@
     <string name="unacceptable_version_code">You must upgrade your application before continuing.</string>   
     <string name="new_participant_prefix">New&#160;</string> 
     <string name="save_participant_prefix">Save&#160;</string> 
+    <string name="new_survey">New Survey</string> 
 </resources>

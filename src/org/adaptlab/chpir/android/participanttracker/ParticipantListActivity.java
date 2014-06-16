@@ -175,6 +175,7 @@ public class ParticipantListActivity extends FragmentActivity implements
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
+                       
             List<Participant> participants = Participant.getAllByParticipantType(getParticipantType());
             setListAdapter(new ParticipantAdapter(getActivity(), participants));
         }
@@ -203,7 +204,7 @@ public class ParticipantListActivity extends FragmentActivity implements
             Participant participant = ((ParticipantAdapter) getListAdapter()).getItem(position);
             Intent i = new Intent(getActivity(), ParticipantDetailActivity.class);
             i.putExtra(ParticipantDetailFragment.EXTRA_PARTICIPANT_ID, participant.getId());
-            startActivity(i);
+            startActivityForResult(i, 0);
         }   
         
         @Override
@@ -236,8 +237,8 @@ public class ParticipantListActivity extends FragmentActivity implements
             
             Participant participant = getItem(position);
             
-            TextView titleTextView = (TextView) convertView
-                    .findViewById(R.id.participant_list_item_titleTextView);
+            TextView titleTextView = (TextView) convertView.findViewById(R.id.participant_list_item_titleTextView);
+            
             titleTextView.setText(participant.getLabel());
             
             return convertView;

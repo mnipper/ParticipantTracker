@@ -7,8 +7,6 @@ import org.adaptlab.chpir.android.models.Property;
 
 import com.activeandroid.ActiveAndroid;
 
-import android.util.Log;
-
 public class AppUtil {
     private static final String TAG = "AppUtil";
     private static final boolean SEED_DB = false;
@@ -17,7 +15,7 @@ public class AppUtil {
         seedDb();
     }
     
-    public static void seedDb() {        
+    public static void seedDb() {           
         if (SEED_DB) {
             String[] dummyParticipantTypes = {"Child", "Caregiver", "Center"};
             for (String participantType : dummyParticipantTypes) {
@@ -36,11 +34,13 @@ public class AppUtil {
             for (ParticipantType participantType : ParticipantType.getAll()) {
                 Property nameProperty = new Property("name", Property.PropertyType.STRING, true, participantType);           
                 Property ageProperty = new Property("age", Property.PropertyType.INTEGER, true, participantType);  
+                
                 participantType.setLabelProperty(nameProperty);
                 
                 participantType.save();
                 nameProperty.save();
                 ageProperty.save();
+                participantType.save();
                 
                 for (int i = 0; i < 4; i++) {  
                     Participant participant = new Participant(participantType);
@@ -50,7 +50,6 @@ public class AppUtil {
                     participantProperty.save();
                 } 
             } 
-        }
-        
+        }       
     }
 }

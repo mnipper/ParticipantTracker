@@ -23,6 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name="org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver">
+            <intent-filter>
+                <action android:name="org.adaptlab.chpir.android.survey.instrument_list" />
+            </intent-filter>
+        </receiver>
         <activity android:name=".ParticipantDetailActivity" />
         <activity android:name=".NewParticipantActivity" />
         <meta-data android:name="AA_DB_NAME" android:value="Tracking.db" />
