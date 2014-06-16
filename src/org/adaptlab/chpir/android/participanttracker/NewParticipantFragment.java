@@ -1,15 +1,18 @@
 package org.adaptlab.chpir.android.participanttracker;
 
+import java.util.HashMap;
+
 import org.adaptlab.chpir.android.models.Participant;
+import org.adaptlab.chpir.android.models.ParticipantProperty;
 import org.adaptlab.chpir.android.models.ParticipantType;
 import org.adaptlab.chpir.android.models.Property;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,9 +24,11 @@ public class NewParticipantFragment extends Fragment {
     
     private Participant mParticipant;
     private ParticipantType mParticipantType;
-    private LinearLayout mParticipantPropertiesContainer;
+    private HashMap<Property, EditText> mPropertyFields;
     
+    private LinearLayout mParticipantPropertiesContainer;
     private TextView mParticipantTitle;
+    private Button mSaveParticipantButton;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,7 @@ public class NewParticipantFragment extends Fragment {
             if (participantTypeId == -1) return;
 
             mParticipantType = ParticipantType.findById(participantTypeId);
+            mPropertyFields = new HashMap<Property, EditText>();
         }
     }
         
@@ -53,10 +59,26 @@ public class NewParticipantFragment extends Fragment {
         for (Property property : mParticipantType.getProperties()) {
             TextView textView = new TextView(getActivity());
             textView.setText(property.getLabel());
-            EditText editText = new EditText(getActivity());
+            final EditText editText = new EditText(getActivity());
+            mPropertyFields.put(property, editText);
             mParticipantPropertiesContainer.addView(textView);
             mParticipantPropertiesContainer.addView(editText);
         }
+        
+        mSaveParticipantButton = (Button) v.findViewById(R.id.save_participant_button);
+        mSaveParticipantButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Participant participant = new Participant(mParticipantType);
+                participant.save();
+                
+                for (Property property : mParticipantType.getProperties()) {
+                    ParticipantProperty participantProperty = new ParticipantProperty(participant, property, mPropertyFields.get(property).getText().toString());
+                    participantProperty.save();
+                }
+                
+                getActivity().finish();
+            } 
+        });
         
         return v;
     }
