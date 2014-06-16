@@ -15,8 +15,8 @@ public class ActiveRecordCloudSync {
     private static final String TAG="ActiveRecordCloudSync";
     private static Map<String, Class<? extends ReceiveModel>> mReceiveTables =
             new LinkedHashMap<String, Class<? extends ReceiveModel>>();
-    private static Map<String, Class<? extends SendModel>> mSendTables =
-            new LinkedHashMap<String, Class<? extends SendModel>>();
+    private static Map<String, Class<? extends SendReceiveModel>> mSendTables =
+            new LinkedHashMap<String, Class<? extends SendReceiveModel>>();
     
     private static String mEndPoint;        // The remote API endpoint url
     private static String mAccessToken;     // API Access Key
@@ -37,7 +37,7 @@ public class ActiveRecordCloudSync {
         return mReceiveTables;
     }
     
-    public static void addSendTable(String tableName, Class<? extends SendModel> sendTable) {
+    public static void addSendTable(String tableName, Class<? extends SendReceiveModel> sendTable) {
         mSendTables.put(tableName, sendTable);
     }
     
@@ -61,7 +61,7 @@ public class ActiveRecordCloudSync {
     
     public static void syncSendTables(Context context) {
         NetworkNotificationUtils.showNotification(context, android.R.drawable.stat_sys_download, R.string.sync_notification_text);
-        for (Map.Entry<String, Class<? extends SendModel>> entry : mSendTables.entrySet()) {
+        for (Map.Entry<String, Class<? extends SendReceiveModel>> entry : mSendTables.entrySet()) {
             Log.i(TAG, "Syncing " + entry.getValue() + " to remote table " + entry.getKey());
             HttpPushr httpPushr = new HttpPushr(entry.getKey(), entry.getValue());
             httpPushr.push();

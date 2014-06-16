@@ -35,7 +35,7 @@ public class AppUtil {
     
     private static void syncData() {
 		new FetchDataTask(mContext).execute();
-		//new SendDataTask(mContext).execute();
+		new SendDataTask(mContext).execute();
 	}
     
     public static void seedDb() {        

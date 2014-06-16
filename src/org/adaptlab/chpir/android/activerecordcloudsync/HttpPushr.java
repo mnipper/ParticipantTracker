@@ -18,11 +18,11 @@ import com.activeandroid.query.Select;
 
 public class HttpPushr {
     private static final String TAG = "HttpPushr";
-    private Class<? extends SendModel> mSendTableClass;
+    private Class<? extends SendReceiveModel> mSendTableClass;
     private String mRemoteTableName;
 
     public HttpPushr(String remoteTableName,
-            Class<? extends SendModel> sendTableClass) {
+            Class<? extends SendReceiveModel> sendTableClass) {
         mSendTableClass = sendTableClass;
         mRemoteTableName = remoteTableName;
     }
@@ -33,9 +33,9 @@ public class HttpPushr {
             return;
         }
 
-        List<? extends SendModel> allElements = getElements();
+        List<? extends SendReceiveModel> allElements = getElements();
 
-        for (SendModel element : allElements) {
+        for (SendReceiveModel element : allElements) {
             HttpClient client = new DefaultHttpClient();
             HttpConnectionParams
                     .setConnectionTimeout(client.getParams(), 10000); // Timeout limit
@@ -78,7 +78,7 @@ public class HttpPushr {
 
     }
 
-	public List<? extends SendModel> getElements() {
+	public List<? extends SendReceiveModel> getElements() {
 		return new Select().from(mSendTableClass).orderBy("Id ASC").execute();
 	}
 }
