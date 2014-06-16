@@ -51,7 +51,7 @@ public class ParticipantListActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppUtil.appInit();
+        AppUtil.appInit(this);
 
         setContentView(R.layout.activity_participant_list);
 

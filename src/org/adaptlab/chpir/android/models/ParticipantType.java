@@ -20,7 +20,7 @@ public class ParticipantType extends ReceiveModel {
     private String mLabel;
     @Column(name = "LabelProperty")
     private Property mLabelProperty;
-    @Column(name = "RemoveId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    @Column(name = "RemoteId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long mRemoteId;
     
     public ParticipantType() {
