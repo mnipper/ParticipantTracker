@@ -9,6 +9,7 @@ import org.adaptlab.chpir.android.models.Property;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ public class NewParticipantFragment extends Fragment {
     public final static String EXTRA_PARTICIPANT_TYPE_ID = 
             "org.adaptlab.chpir.participanttracker.newparticipantfragment.participant_type_id";
     
-    private Participant mParticipant;
     private ParticipantType mParticipantType;
     private HashMap<Property, EditText> mPropertyFields;
     
@@ -60,12 +60,17 @@ public class NewParticipantFragment extends Fragment {
             TextView textView = new TextView(getActivity());
             textView.setText(property.getLabel());
             final EditText editText = new EditText(getActivity());
+            if (property.getTypeOf() == Property.PropertyType.INTEGER) {
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+            }
+            
             mPropertyFields.put(property, editText);
             mParticipantPropertiesContainer.addView(textView);
             mParticipantPropertiesContainer.addView(editText);
         }
         
         mSaveParticipantButton = (Button) v.findViewById(R.id.save_participant_button);
+        mSaveParticipantButton.setText(getString(R.string.save_participant_prefix) + mParticipantType.getLabel());
         mSaveParticipantButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Participant participant = new Participant(mParticipantType);
