@@ -18,6 +18,7 @@ public class FetchDataTask extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		if (NetworkNotificationUtils.checkForNetworkErrors(mContext)) {
 			ActiveRecordCloudSync.syncReceiveTables(mContext);
+			ActiveRecordCloudSync.syncFetchSendReceiveTables(mContext);
 		}
 		return null;
 	}

@@ -27,7 +27,7 @@ public class PollService extends IntentService {
         if (NetworkNotificationUtils.checkForNetworkErrors(getApplicationContext())) {
             lastUpdate = new Date();
             ActiveRecordCloudSync.syncReceiveTables(getApplicationContext());
-            ActiveRecordCloudSync.syncSendTables(getApplicationContext());
+            ActiveRecordCloudSync.syncFetchSendReceiveTables(getApplicationContext());
         }
     }
 
