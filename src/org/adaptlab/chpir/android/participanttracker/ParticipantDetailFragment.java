@@ -86,6 +86,7 @@ public class ParticipantDetailFragment extends Fragment {
                 i.putExtra(InstrumentListReceiver.START_SURVEY_INSTRUMENT_ID, instrumentIdList[which]);
                 i.putExtra(EXTRA_PARTICIPANT_METADATA, getParticipantMetadataJSON());
                 sActivity.sendBroadcast(i);
+                dialog.cancel();
                 sActivity.finish();
             }
         }); 
