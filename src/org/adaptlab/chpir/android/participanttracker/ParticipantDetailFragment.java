@@ -22,24 +22,29 @@ public class ParticipantDetailFragment extends Fragment {
     private static final String TAG = "ParticipantDetailFragment";
     public final static String EXTRA_PARTICIPANT_ID = 
             "org.adaptlab.chpir.participanttracker.participantdetailfragment.participant_id";
+    public final static String EXTRA_PARTICIPANT_METADATA =
+            "org.adaptlab.chpir.android.survey.metadata";
     
     private Participant mParticipant;
+    private static String sParticipantUUID;
     private LinearLayout mParticipantPropertiesContainer;
     private Button mNewSurveyButton;
-    private static Activity mActivity;
+    private static Activity sActivity;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = getActivity();
+        sActivity = getActivity();
         
         if (savedInstanceState != null) {
             mParticipant = Participant.findById(savedInstanceState.getLong(EXTRA_PARTICIPANT_ID));
+            sParticipantUUID = mParticipant.getUUID();
         } else {
             Long participantId = getActivity().getIntent().getLongExtra(EXTRA_PARTICIPANT_ID, -1);
             if (participantId == -1) return;
 
             mParticipant = Participant.findById(participantId);
+            sParticipantUUID = mParticipant.getUUID();
         }
     }
     
@@ -71,7 +76,7 @@ public class ParticipantDetailFragment extends Fragment {
     }
     
     public static void displayInstrumentPicker(String[] instrumentTitleList, final long[] instrumentIdList) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(sActivity);
         builder.setTitle("Choose something");
         builder.setSingleChoiceItems(instrumentTitleList, -1, new DialogInterface.OnClickListener() {
             @Override
@@ -79,11 +84,16 @@ public class ParticipantDetailFragment extends Fragment {
                 Intent i = new Intent();
                 i.setAction(InstrumentListReceiver.START_SURVEY);
                 i.putExtra(InstrumentListReceiver.START_SURVEY_INSTRUMENT_ID, instrumentIdList[which]);
-                mActivity.sendBroadcast(i);
-                mActivity.finish();
+                i.putExtra(EXTRA_PARTICIPANT_METADATA, getParticipantMetadataJSON());
+                sActivity.sendBroadcast(i);
+                sActivity.finish();
             }
         }); 
         
         builder.show();
+    }
+    
+    private static String getParticipantMetadataJSON() {
+        return "{\"participant_uuid\": \"" + sParticipantUUID + "\"}";
     }
 }
