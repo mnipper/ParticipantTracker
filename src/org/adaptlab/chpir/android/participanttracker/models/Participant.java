@@ -130,13 +130,14 @@ public class Participant extends SendReceiveModel {
 	@Override
 	public void createObjectFromJSON(JSONObject jsonObject) {
 		try {
-			Long remoteId = jsonObject.getLong("id");
-			Participant participant = Participant.findById(remoteId);
+			String uuid = jsonObject.getString("uuid");
+			Participant participant = Participant.findByUUID(uuid);
 			if (participant == null) {
 				participant = this;
 			}
+			participant.setUUID(uuid);
+			Long remoteId = jsonObject.getLong("id");
 			participant.setRemoteId(remoteId);
-			participant.setUUID(jsonObject.getString("uuid"));
 			Long participantTypeId = jsonObject.getLong("participant_type_id");
 			ParticipantType participantType = ParticipantType.findById(participantTypeId);
 			if (participantType != null) {

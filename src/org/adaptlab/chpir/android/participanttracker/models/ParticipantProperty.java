@@ -118,17 +118,22 @@ public class ParticipantProperty extends SendReceiveModel {
     public static ParticipantProperty findById(Long id) {
     	return new Select().from(ParticipantProperty.class).where("RemoteId = ?", id).executeSingle();
     }
+    
+    public static ParticipantProperty findByUUID(String uuid) {
+    	return new Select().from(ParticipantProperty.class).where("UUID = ?", uuid).executeSingle();
+    }
 
 	@Override
 	public void createObjectFromJSON(JSONObject jsonObject) {
 		try {
-			Long remoteId = jsonObject.getLong("id");
-			ParticipantProperty participantProperty = ParticipantProperty.findById(remoteId);
+			String uuid = jsonObject.getString("uuid");
+			ParticipantProperty participantProperty = ParticipantProperty.findByUUID(uuid);
 			if (participantProperty == null) {
 				participantProperty = this;
 			}
+			participantProperty.setUUID(uuid);
+			Long remoteId = jsonObject.getLong("id");
 			participantProperty.setRemoteId(remoteId);
-			participantProperty.setUUID(jsonObject.getString("uuid"));
 			Participant participant = Participant.findByUUID(jsonObject.getString("participant_uuid"));
 			if (participant != null) {
 				participantProperty.setParticipant(participant);
