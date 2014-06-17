@@ -99,15 +99,15 @@ public class NewParticipantFragment extends Fragment {
     }
     
     private boolean isMissingRequiredValue() {
+        boolean missingField = false;
         for (Property property : mParticipantType.getProperties()) {
             if (mPropertyFields.get(property).getText().toString().equals("")) {
-                Toast.makeText(getActivity(), property.getLabel() + getString(R.string.is_a_required_field), Toast.LENGTH_LONG).show();
                 mPropertyFields.get(property).setError(getString(R.string.required_field));
-                return true;
+                missingField = true;
             }
         }
         
-        return false;
+        return missingField;
     }
     
     private void attachRequiredLabel(Property property) {
