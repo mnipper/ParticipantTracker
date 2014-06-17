@@ -13,13 +13,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class NewParticipantFragment extends Fragment {
     private static final String TAG = "NewParticipantFragment";
@@ -30,8 +32,6 @@ public class NewParticipantFragment extends Fragment {
     private HashMap<Property, EditText> mPropertyFields;
     
     private LinearLayout mParticipantPropertiesContainer;
-    private TextView mParticipantTitle;
-    private Button mSaveParticipantButton;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,56 +46,45 @@ public class NewParticipantFragment extends Fragment {
             mParticipantType = ParticipantType.findById(participantTypeId);
             mPropertyFields = new HashMap<Property, EditText>();
         }
+        
+        
+        getActivity().setTitle(getString(R.string.new_participant_prefix) + mParticipantType.getLabel());
     }
         
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent,
             Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        
         View v = inflater.inflate(R.layout.fragment_new_participant, parent,
                 false);
-        
-        mParticipantTitle = (TextView) v.findViewById(R.id.new_participant_title);
-        mParticipantTitle.setText(getString(R.string.new_participant_prefix) + mParticipantType.getLabel());
         
         mParticipantPropertiesContainer = (LinearLayout) v.findViewById(R.id.new_participant_properties_container);
 
         for (Property property : mParticipantType.getProperties()) {
-            TextView textView = new TextView(getActivity());
-            textView.setText(property.getLabel());
-            final EditText editText = new EditText(getActivity());
-            if (property.getTypeOf() == Property.PropertyType.INTEGER) {
-                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-            }
-
-            mPropertyFields.put(property, editText);
-            mParticipantPropertiesContainer.addView(textView);
-            mParticipantPropertiesContainer.addView(editText);
-
+            attachLabelForProperty(property);
+            attachFieldForProperty(property);
             attachRequiredLabel(property);
         }
         
-        mSaveParticipantButton = (Button) v.findViewById(R.id.save_participant_button);
-        mSaveParticipantButton.setText(getString(R.string.save_participant_prefix) + mParticipantType.getLabel());
-        mSaveParticipantButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (isMissingRequiredValue()) {
-                    return;
-                }
-                
-                Participant participant = new Participant(mParticipantType);
-                participant.save();
-                
-                for (Property property : mParticipantType.getProperties()) {
-                    ParticipantProperty participantProperty = new ParticipantProperty(participant, property, mPropertyFields.get(property).getText().toString());
-                    participantProperty.save();
-                }
-                
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
-            } 
-        });
-        
         return v;
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.new_participant, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                saveParticipant();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
     
     private boolean isMissingRequiredValue() {
@@ -117,5 +106,43 @@ public class NewParticipantFragment extends Fragment {
             requiredTextView.setTextColor(Color.RED);
             mParticipantPropertiesContainer.addView(requiredTextView);
         }
+    }
+    
+    private void attachLabelForProperty(Property property) {
+        TextView textView = new TextView(getActivity());
+        textView.setText(property.getLabel());
+        textView.setTextAppearance(getActivity(), R.style.sectionHeader);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 50, 0, 0);
+        textView.setLayoutParams(layoutParams);
+        mParticipantPropertiesContainer.addView(textView);
+    }
+    
+    private void attachFieldForProperty(Property property) {        
+        final EditText editText = new EditText(getActivity());
+        if (property.getTypeOf() == Property.PropertyType.INTEGER) {
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        }
+
+        mPropertyFields.put(property, editText);
+        mParticipantPropertiesContainer.addView(editText);
+    }
+    
+    private void saveParticipant() {
+        if (isMissingRequiredValue()) {
+            return;
+        }
+        
+        Participant participant = new Participant(mParticipantType);
+        participant.save();
+        
+        for (Property property : mParticipantType.getProperties()) {
+            ParticipantProperty participantProperty = new ParticipantProperty(participant, property, mPropertyFields.get(property).getText().toString());
+            participantProperty.save();
+        }
+        
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 }

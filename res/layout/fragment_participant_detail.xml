@@ -2,28 +2,21 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+    
     <LinearLayout
         android:id="@+id/participant_detail_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"  >
 
         <LinearLayout
             android:id="@+id/participant_properties_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        
-	        
+            android:orientation="vertical" >	        
         </LinearLayout>
-    
-        
-        <Button
-             android:id="@+id/new_survey_button"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-              android:text="@string/new_survey" />
-    
-    </LinearLayout>
-    
+
+    </LinearLayout>  
 </ScrollView>

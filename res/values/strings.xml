@@ -8,8 +8,9 @@
     <string name="api_unavailable">Remote api is not responsive.</string>   
     <string name="unacceptable_version_code">You must upgrade your application before continuing.</string>   
     <string name="new_participant_prefix">New&#160;</string> 
-    <string name="save_participant_prefix">Save&#160;</string> 
+    <string name="save">Save</string> 
     <string name="new_survey">New Survey</string> 
     <string name="choose_instrument">Choose Instrument</string>
     <string name="required_field">This field is required.</string>
+    <string name="action_search">Search</string>
 </resources>
