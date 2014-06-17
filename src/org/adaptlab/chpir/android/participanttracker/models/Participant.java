@@ -105,7 +105,7 @@ public class Participant extends SendReceiveModel {
 
     @Override
     public boolean readyToSend() {
-        return false;
+        return true; //TODO: For Testing...FIX - also in ParticipantProperty
     }
 
     @Override
