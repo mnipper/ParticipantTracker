@@ -70,7 +70,7 @@ public class NewParticipantFragment extends Fragment {
             mPropertyFields.put(property, editText);
             mParticipantPropertiesContainer.addView(textView);
             mParticipantPropertiesContainer.addView(editText);
-            
+
             attachRequiredLabel(property);
         }
         
@@ -102,6 +102,7 @@ public class NewParticipantFragment extends Fragment {
         for (Property property : mParticipantType.getProperties()) {
             if (mPropertyFields.get(property).getText().toString().equals("")) {
                 Toast.makeText(getActivity(), property.getLabel() + getString(R.string.is_a_required_field), Toast.LENGTH_LONG).show();
+                mPropertyFields.get(property).setError(getString(R.string.required_field));
                 return true;
             }
         }
