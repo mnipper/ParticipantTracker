@@ -12,12 +12,12 @@ import org.json.JSONException;
 
 import android.util.Log;
 
-public class HttpFetchr {
-    private static final String TAG = "HttpFetchr";
-    Class <? extends ReceiveModel> mReceiveTableClass;
+public class SendReceiveFetchr {
+	private static final String TAG = "HttpFetchr";
+    private Class <? extends SendReceiveModel> mReceiveTableClass;
     private String mRemoteTableName;
     
-    public HttpFetchr(String remoteTableName, Class<? extends ReceiveModel> receiveTableClass) {
+    public SendReceiveFetchr(String remoteTableName, Class<? extends SendReceiveModel> receiveTableClass) {
         mReceiveTableClass = receiveTableClass;
         mRemoteTableName = remoteTableName;
     }
@@ -42,7 +42,7 @@ public class HttpFetchr {
             Log.i(TAG, "Received json result: " + jsonArray);
             
             for (int i = 0; i < jsonArray.length(); i++) {
-                ReceiveModel tableInstance = mReceiveTableClass.newInstance();
+                SendReceiveModel tableInstance = mReceiveTableClass.newInstance();
                 tableInstance.createObjectFromJSON(jsonArray.getJSONObject(i));
             }
             

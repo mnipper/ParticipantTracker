@@ -29,13 +29,13 @@ public class AppUtil {
 		ActiveRecordCloudSync.setEndPoint(ENDPOINT);
 		ActiveRecordCloudSync.addReceiveTable("participant_types", ParticipantType.class);
 		ActiveRecordCloudSync.addReceiveTable("properties", Property.class);
-		ActiveRecordCloudSync.addSendTable("participants", Participant.class);
-		ActiveRecordCloudSync.addSendTable("participant_properties", ParticipantProperty.class);
+		ActiveRecordCloudSync.addSendReceiveTable("participants", Participant.class);
+		ActiveRecordCloudSync.addSendReceiveTable("participant_properties", ParticipantProperty.class);
 	}
     
     private static void syncData() {
 		new FetchDataTask(mContext).execute();
-		//new SendDataTask(mContext).execute();
+		new SendDataTask(mContext).execute();
 	}
     
     public static void seedDb() {        
