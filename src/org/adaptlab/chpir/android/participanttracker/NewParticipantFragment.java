@@ -101,7 +101,7 @@ public class NewParticipantFragment extends Fragment {
     private boolean isMissingRequiredValue() {
         boolean missingField = false;
         for (Property property : mParticipantType.getProperties()) {
-            if (mPropertyFields.get(property).getText().toString().equals("")) {
+            if (mPropertyFields.get(property).getText().toString().trim().equals("")) {
                 mPropertyFields.get(property).setError(getString(R.string.required_field));
                 missingField = true;
             }
