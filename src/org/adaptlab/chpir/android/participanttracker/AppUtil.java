@@ -1,10 +1,10 @@
 package org.adaptlab.chpir.android.participanttracker;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
-import org.adaptlab.chpir.android.models.Participant;
-import org.adaptlab.chpir.android.models.ParticipantProperty;
-import org.adaptlab.chpir.android.models.ParticipantType;
-import org.adaptlab.chpir.android.models.Property;
+import org.adaptlab.chpir.android.participanttracker.models.Participant;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
+import org.adaptlab.chpir.android.participanttracker.models.Property;
 import org.adaptlab.chpir.android.participanttracker.tasks.*;
 
 import com.activeandroid.ActiveAndroid;

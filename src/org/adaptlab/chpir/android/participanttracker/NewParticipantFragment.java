@@ -2,10 +2,10 @@ package org.adaptlab.chpir.android.participanttracker;
 
 import java.util.HashMap;
 
-import org.adaptlab.chpir.android.models.Participant;
-import org.adaptlab.chpir.android.models.ParticipantProperty;
-import org.adaptlab.chpir.android.models.ParticipantType;
-import org.adaptlab.chpir.android.models.Property;
+import org.adaptlab.chpir.android.participanttracker.models.Participant;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
+import org.adaptlab.chpir.android.participanttracker.models.Property;
 
 import android.app.Activity;
 import android.os.Bundle;
