@@ -65,7 +65,7 @@ public class Participant extends SendModel {
     }
     
     public static List<Participant> getAllByParticipantType(ParticipantType participantType) {
-        return new Select().from(Participant.class).where("ParticipantType = ?", participantType.getId()).execute();
+        return new Select().from(Participant.class).where("ParticipantType = ?", participantType.getId()).orderBy("Id DESC").execute();
     }
     
     public static int getCount() {
