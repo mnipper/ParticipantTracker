@@ -3,9 +3,6 @@
 
     <string name="app_name">ParticipantTracker</string>
     <string name="action_settings">Settings</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
     <string name="sync_notification_text">Syncing with server...</string>   
     <string name="sync_notification_complete_text">Syncing with server complete.</string>    
     <string name="network_unavailable">No network available on the device.</string> 
