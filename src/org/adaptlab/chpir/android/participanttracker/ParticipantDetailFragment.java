@@ -1,8 +1,8 @@
 package org.adaptlab.chpir.android.participanttracker;
 
-import org.adaptlab.chpir.android.models.Participant;
-import org.adaptlab.chpir.android.models.ParticipantProperty;
 import org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver;
+import org.adaptlab.chpir.android.participanttracker.models.Participant;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
 
 import android.app.Activity;
 import android.app.AlertDialog;
