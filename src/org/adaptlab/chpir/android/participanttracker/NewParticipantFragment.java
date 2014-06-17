@@ -8,6 +8,7 @@ import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
 import org.adaptlab.chpir.android.participanttracker.models.Property;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NewParticipantFragment extends Fragment {
     private static final String TAG = "NewParticipantFragment";
@@ -64,16 +66,22 @@ public class NewParticipantFragment extends Fragment {
             if (property.getTypeOf() == Property.PropertyType.INTEGER) {
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
             }
-            
+
             mPropertyFields.put(property, editText);
             mParticipantPropertiesContainer.addView(textView);
             mParticipantPropertiesContainer.addView(editText);
+            
+            attachRequiredLabel(property);
         }
         
         mSaveParticipantButton = (Button) v.findViewById(R.id.save_participant_button);
         mSaveParticipantButton.setText(getString(R.string.save_participant_prefix) + mParticipantType.getLabel());
         mSaveParticipantButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (isMissingRequiredValue()) {
+                    return;
+                }
+                
                 Participant participant = new Participant(mParticipantType);
                 participant.save();
                 
@@ -88,5 +96,25 @@ public class NewParticipantFragment extends Fragment {
         });
         
         return v;
+    }
+    
+    private boolean isMissingRequiredValue() {
+        for (Property property : mParticipantType.getProperties()) {
+            if (mPropertyFields.get(property).getText().toString().equals("")) {
+                Toast.makeText(getActivity(), property.getLabel() + getString(R.string.is_a_required_field), Toast.LENGTH_LONG).show();
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private void attachRequiredLabel(Property property) {
+        if (property.getRequired()) {
+            TextView requiredTextView = new TextView(getActivity());
+            requiredTextView.setText(getString(R.string.required_field));
+            requiredTextView.setTextColor(Color.RED);
+            mParticipantPropertiesContainer.addView(requiredTextView);
+        }
     }
 }

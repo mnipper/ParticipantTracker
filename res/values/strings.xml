@@ -15,4 +15,6 @@
     <string name="save_participant_prefix">Save&#160;</string> 
     <string name="new_survey">New Survey</string> 
     <string name="choose_instrument">Choose Instrument</string>
+    <string name="required_field">This field is required.</string>
+    <string name="is_a_required_field">&#160;is a required field.</string>
 </resources>
