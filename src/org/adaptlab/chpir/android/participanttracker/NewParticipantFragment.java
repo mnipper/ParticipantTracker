@@ -7,6 +7,7 @@ import org.adaptlab.chpir.android.models.ParticipantProperty;
 import org.adaptlab.chpir.android.models.ParticipantType;
 import org.adaptlab.chpir.android.models.Property;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -81,6 +82,7 @@ public class NewParticipantFragment extends Fragment {
                     participantProperty.save();
                 }
                 
+                getActivity().setResult(Activity.RESULT_OK);
                 getActivity().finish();
             } 
         });

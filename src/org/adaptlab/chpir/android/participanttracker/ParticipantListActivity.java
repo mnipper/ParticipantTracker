@@ -150,12 +150,9 @@ public class ParticipantListActivity extends FragmentActivity implements
         }
     }
 
-    /**
-     * A dummy fragment representing a section of the app, but that simply
-     * displays dummy text.
-     */
     public static class ParticipantListFragment extends ListFragment {
         private static final String TAG = "ParticipantListFragment";
+        private static final int CREATE_NEW_PARTICIPANT = 0;
         
         /**
          * The fragment argument representing the section number for this
@@ -176,8 +173,7 @@ public class ParticipantListActivity extends FragmentActivity implements
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
                        
-            List<Participant> participants = Participant.getAllByParticipantType(getParticipantType());
-            setListAdapter(new ParticipantAdapter(getActivity(), participants));
+            setParticipantListAdapter();
         }
 
         @Override
@@ -192,7 +188,7 @@ public class ParticipantListActivity extends FragmentActivity implements
                 public void onClick(View v) {
                     Intent i = new Intent(getActivity(), NewParticipantActivity.class);
                     i.putExtra(NewParticipantFragment.EXTRA_PARTICIPANT_TYPE_ID, getParticipantType().getId());
-                    startActivity(i);
+                    startActivityForResult(i, CREATE_NEW_PARTICIPANT);
                 }
             });
 
@@ -204,19 +200,34 @@ public class ParticipantListActivity extends FragmentActivity implements
             Participant participant = ((ParticipantAdapter) getListAdapter()).getItem(position);
             Intent i = new Intent(getActivity(), ParticipantDetailActivity.class);
             i.putExtra(ParticipantDetailFragment.EXTRA_PARTICIPANT_ID, participant.getId());
-            startActivityForResult(i, 0);
+            startActivity(i);
         }   
         
         @Override
         public void onResume() {
             super.onResume();
-            ((BaseAdapter) getListAdapter()).notifyDataSetChanged();
+            setParticipantListAdapter();
         }
         
         private ParticipantType getParticipantType() {
             int participantTypeId = getArguments().getInt(ARG_SECTION_NUMBER, 0);
             ParticipantType participantType = ParticipantType.getAll().get(participantTypeId);
             return participantType;
+        }
+        
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            if (requestCode == CREATE_NEW_PARTICIPANT) {
+                if (resultCode == RESULT_OK) {
+                    setParticipantListAdapter();
+                }
+            }
+        }
+        
+        private void setParticipantListAdapter() {
+            List<Participant> participants = Participant.getAllByParticipantType(getParticipantType());
+            setListAdapter(new ParticipantAdapter(getActivity(), participants));
         }
     }
     
