@@ -77,7 +77,7 @@ public class ParticipantDetailFragment extends Fragment {
     
     public static void displayInstrumentPicker(String[] instrumentTitleList, final long[] instrumentIdList) {
         AlertDialog.Builder builder = new AlertDialog.Builder(sActivity);
-        builder.setTitle("Choose something");
+        builder.setTitle(sActivity.getString(R.string.choose_instrument));
         builder.setSingleChoiceItems(instrumentTitleList, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {             
