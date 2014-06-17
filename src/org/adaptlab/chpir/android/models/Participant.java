@@ -99,14 +99,16 @@ public class Participant extends SendModel {
         mSent = true;
     }
     
-    public String getLabel() {        
-        if (getParticipantType().getLabelProperty() != null) {
-            for (ParticipantProperty participantProperty : getParticipantProperties()) {
-                if (participantProperty.getProperty().equals(getParticipantType().getLabelProperty())) {
-                    return participantProperty.getValue();
-                }
-            } 
-        }
+    public List<Property> getProperties() {
+        return Property.getAllByParticipantType(getParticipantType());
+    }
+    
+    public String getLabel() {
+        for (ParticipantProperty participantProperty : getParticipantProperties()) {
+            if (participantProperty.getProperty().getUseAsLabel()) {
+                return participantProperty.getValue();
+            }
+        } 
         
         return mUUID;
     }
