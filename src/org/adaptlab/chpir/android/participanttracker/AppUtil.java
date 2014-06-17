@@ -57,12 +57,12 @@ public class AppUtil {
             for (ParticipantType participantType : ParticipantType.getAll()) {
                 Property nameProperty = new Property("name", Property.PropertyType.STRING, true, participantType);           
                 Property ageProperty = new Property("age", Property.PropertyType.INTEGER, true, participantType);  
-                participantType.setLabelProperty(nameProperty);
                 
-                participantType.save();
+                nameProperty.setUseAsLabel(true);
+
                 nameProperty.save();
                 ageProperty.save();
-                
+
                 for (int i = 0; i < 4; i++) {  
                     Participant participant = new Participant(participantType);
                     participant.save();
@@ -71,7 +71,6 @@ public class AppUtil {
                     participantProperty.save();
                 } 
             } 
-        }
-        
+        }       
     }
 }

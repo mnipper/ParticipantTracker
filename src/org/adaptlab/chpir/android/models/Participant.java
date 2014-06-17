@@ -75,7 +75,7 @@ public class Participant extends SendReceiveModel {
     }
     
     public static List<Participant> getAllByParticipantType(ParticipantType participantType) {
-        return new Select().from(Participant.class).where("ParticipantType = ?", participantType.getId()).execute();
+        return new Select().from(Participant.class).where("ParticipantType = ?", participantType.getId()).orderBy("Id DESC").execute();
     }
     
     public static int getCount() {
@@ -113,12 +113,16 @@ public class Participant extends SendReceiveModel {
         mSent = true;
     }
     
+    public List<Property> getProperties() {
+        return Property.getAllByParticipantType(getParticipantType());
+    }
+    
     public String getLabel() {
         for (ParticipantProperty participantProperty : getParticipantProperties()) {
-            if (participantProperty.getProperty() == getParticipantType().getLabelProperty()) {
+            if (participantProperty.getProperty().getUseAsLabel()) {
                 return participantProperty.getValue();
             }
-        }
+        } 
         
         return mUUID;
     }

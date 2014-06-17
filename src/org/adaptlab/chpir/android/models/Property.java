@@ -28,6 +28,8 @@ public class Property extends ReceiveModel {
     private boolean mRequired;
     @Column(name = "ParticipantType")
     private ParticipantType mParticipantType;
+    @Column(name = "UseAsLabel")
+    private boolean mUseAsLabel;
     
     public Property() {
         super();
@@ -100,6 +102,14 @@ public class Property extends ReceiveModel {
     
     public ParticipantType getParticipantType() {
         return mParticipantType;
+    }
+    
+    public boolean getUseAsLabel() {
+        return mUseAsLabel;
+    }
+    
+    public void setUseAsLabel(boolean useAsLabel) {
+        mUseAsLabel = useAsLabel;
     }
     
     private void setLabel(String label) {

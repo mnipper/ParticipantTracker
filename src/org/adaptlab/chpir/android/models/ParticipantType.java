@@ -18,8 +18,6 @@ public class ParticipantType extends ReceiveModel {
     
     @Column(name = "Label")
     private String mLabel;
-    @Column(name = "LabelProperty")
-    private Property mLabelProperty;
     @Column(name = "RemoteId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long mRemoteId;
     
@@ -85,14 +83,6 @@ public class ParticipantType extends ReceiveModel {
     @Override
     public String toString() {
         return getLabel();
-    }
-    
-    public Property getLabelProperty() {
-        return mLabelProperty;
-    }
-    
-    public void setLabelProperty(Property property) {
-        mLabelProperty = property;
     }
     
     public void setLabel(String label) {
