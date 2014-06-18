@@ -107,7 +107,6 @@ public class ParticipantListActivity extends FragmentActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {	
     	case R.id.action_settings:
-    		//ask for password
     		displayPassWordPrompt();
     		return true;
     	default:
@@ -124,12 +123,12 @@ public class ParticipantListActivity extends FragmentActivity implements
         .setView(input)
         .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() { 
             public void onClick(DialogInterface dialog, int button) {
-//                if (AppUtil.checkAdminPassword(input.getText().toString())) {
-//                    Intent i = new Intent(getActivity(), AdminActivity.class);
-//                    startActivity(i);
-//                } else {
-//                    Toast.makeText(getActivity(), R.string.incorrect_password, Toast.LENGTH_LONG).show();
-//                }
+                if (AppUtil.checkAdminPassword(input.getText().toString())) {
+                    Intent i = new Intent(ParticipantListActivity.this, AdminActivity.class);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(ParticipantListActivity.this, R.string.incorrect_password, Toast.LENGTH_LONG).show();
+                }
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int button) { }

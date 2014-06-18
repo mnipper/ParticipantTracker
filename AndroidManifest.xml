@@ -25,6 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AdminActivity" />
+        <service android:name="org.adaptlab.chpir.android.activerecordcloudsync.PollService" />
         <receiver android:name="org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver">
             <intent-filter>
                 <action android:name="org.adaptlab.chpir.android.survey.instrument_list" />
