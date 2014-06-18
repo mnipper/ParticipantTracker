@@ -75,13 +75,15 @@ public class AppUtil {
             }
             
             for (ParticipantType participantType : ParticipantType.getAll()) {
-                Property nameProperty = new Property("name", Property.PropertyType.STRING, true, participantType);           
-                Property ageProperty = new Property("age", Property.PropertyType.INTEGER, true, participantType);  
+                Property nameProperty = new Property("Name", Property.PropertyType.STRING, true, participantType);           
+                Property ageProperty = new Property("Age", Property.PropertyType.INTEGER, false, participantType); 
+                Property dateProperty = new Property("Birthday", Property.PropertyType.DATE, false, participantType);
                 
                 nameProperty.setUseAsLabel(true);
 
                 nameProperty.save();
                 ageProperty.save();
+                dateProperty.save();
 
                 for (int i = 0; i < 4; i++) {  
                     Participant participant = new Participant(participantType);

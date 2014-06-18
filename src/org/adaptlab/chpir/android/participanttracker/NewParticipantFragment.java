@@ -91,7 +91,7 @@ public class NewParticipantFragment extends Fragment {
     private boolean isMissingRequiredValue() {
         boolean missingField = false;
         for (Property property : mParticipantType.getProperties()) {
-            if (mPropertyFields.get(property).getText().toString().trim().equals("")) {
+            if (property.getRequired() && mPropertyFields.get(property).getText().toString().trim().equals("")) {
                 mPropertyFields.get(property).setError(getString(R.string.required_field));
                 missingField = true;
             }
@@ -122,8 +122,11 @@ public class NewParticipantFragment extends Fragment {
     
     private void attachFieldForProperty(Property property) {        
         final EditText editText = new EditText(getActivity());
+        
         if (property.getTypeOf() == Property.PropertyType.INTEGER) {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        } else if (property.getTypeOf() == Property.PropertyType.DATE) {
+            editText.setInputType(InputType.TYPE_CLASS_DATETIME | InputType.TYPE_DATETIME_VARIATION_DATE);
         }
 
         mPropertyFields.put(property, editText);
