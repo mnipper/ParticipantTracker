@@ -16,6 +16,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,6 +43,7 @@ import android.widget.Toast;
 public class ParticipantListActivity extends FragmentActivity implements
         ActionBar.TabListener {
     private static final String TAG = "ParticipantListActivity";
+    private static final String MENU_COLOR = "#8a95b2";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -67,7 +70,8 @@ public class ParticipantListActivity extends FragmentActivity implements
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(MENU_COLOR)));
+        
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the app.
         mSectionsPagerAdapter = new SectionsPagerAdapter(
@@ -95,7 +99,7 @@ public class ParticipantListActivity extends FragmentActivity implements
             // the TabListener interface, as the callback (listener) for when
             // this tab is selected.
             actionBar.addTab(actionBar.newTab()
-                    .setText(mSectionsPagerAdapter.getPageTitle(i))
+                    .setText(mSectionsPagerAdapter.getPageTitle(i))                  
                     .setTabListener(this));
         }
     }
