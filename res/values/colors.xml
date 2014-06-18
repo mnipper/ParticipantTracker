@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="emphasis">#31b6e7</color>
+    <color name="actionbar_text">#000000</color>
+    <color name="actionbar_background">#8a95b2</color>
 </resources>
