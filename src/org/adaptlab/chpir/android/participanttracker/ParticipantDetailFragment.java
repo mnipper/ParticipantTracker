@@ -8,10 +8,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -46,33 +51,43 @@ public class ParticipantDetailFragment extends Fragment {
             mParticipant = Participant.findById(participantId);
             sParticipantUUID = mParticipant.getUUID();
         }
+        
+        getActivity().setTitle(mParticipant.getLabel());
     }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent,
             Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View v = inflater.inflate(R.layout.fragment_participant_detail, parent,
                 false);       
         
         mParticipantPropertiesContainer = (LinearLayout) v.findViewById(R.id.participant_properties_container);
         
         for (ParticipantProperty participantProperty : mParticipant.getParticipantProperties()) {
-            TextView textView = new TextView(getActivity());
-            textView.setText(participantProperty.getProperty().getLabel() + ": " + participantProperty.getValue());
-            mParticipantPropertiesContainer.addView(textView);
+            addKeyValueLabel(participantProperty.getProperty().getLabel(), participantProperty.getValue());
         }
         
-        mNewSurveyButton = (Button) v.findViewById(R.id.new_survey_button);
-        mNewSurveyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent();
-                i.setAction(InstrumentListReceiver.GET_INSTRUMENT_LIST);
-                getActivity().getApplicationContext().sendBroadcast(i);       
-            }
-        });
+        addKeyValueLabel("UUID", mParticipant.getUUID());
         
         return v;
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.participant_detail, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_new:
+                newSurvey();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
     
     public static void displayInstrumentPicker(String[] instrumentTitleList, final long[] instrumentIdList) {
@@ -96,5 +111,28 @@ public class ParticipantDetailFragment extends Fragment {
     
     private static String getParticipantMetadataJSON() {
         return "{\"participant_uuid\": \"" + sParticipantUUID + "\"}";
+    }
+    
+    private void newSurvey() {
+        Intent i = new Intent();
+        i.setAction(InstrumentListReceiver.GET_INSTRUMENT_LIST);
+        getActivity().getApplicationContext().sendBroadcast(i);
+    }
+    
+    private void addKeyValueLabel(String key, String value) {
+        TextView textView = new TextView(getActivity());
+        textView.setTextAppearance(getActivity(), R.style.sectionHeader);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 25, 0, 0);
+        textView.setLayoutParams(layoutParams);
+        mParticipantPropertiesContainer.addView(textView);
+        textView.setText(key);
+        
+        textView = new TextView(getActivity());
+        SpannableString spanString = new SpannableString(value);
+        spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+        textView.setText(spanString);
+        mParticipantPropertiesContainer.addView(textView);
     }
 }
