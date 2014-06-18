@@ -10,4 +10,5 @@ public abstract class SendReceiveModel extends Model {
     public abstract boolean readyToSend();
     public abstract void setAsSent();
     public abstract void createObjectFromJSON(JSONObject jsonObject);
+	public abstract Long getRemoteId();
 }

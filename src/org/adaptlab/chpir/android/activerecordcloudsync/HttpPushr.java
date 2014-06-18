@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
@@ -44,18 +45,19 @@ public class HttpPushr {
 
             if (!element.isSent() && element.readyToSend()) {
                 try {
-                    HttpPost post = new HttpPost(
-                            ActiveRecordCloudSync.getEndPoint()
-                                    + mRemoteTableName + ActiveRecordCloudSync.getParams());
-                    StringEntity se = new StringEntity(element.toJSON()
-                            .toString());
-                    se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
-                            "application/json"));
-                    post.setEntity(se);
-                    Log.i(TAG, "Sending post request: "
-                            + element.toJSON().toString());
-                    response = client.execute(post);
-
+                	StringEntity se = new StringEntity(element.toJSON().toString());
+                    se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    if (element.getRemoteId() != null) {
+                    	HttpPut put = new HttpPut(ActiveRecordCloudSync.getEndPoint() + mRemoteTableName + '/' + element.getRemoteId().toString() + '/' + ActiveRecordCloudSync.getParams());
+                    	put.setEntity(se);
+                    	Log.i(TAG, "Sending put request: " + element.toJSON().toString());
+	                    response = client.execute(put);
+                    } else {
+	                	HttpPost post = new HttpPost(ActiveRecordCloudSync.getEndPoint() + mRemoteTableName + ActiveRecordCloudSync.getParams());
+	                    post.setEntity(se);
+	                    Log.i(TAG, "Sending post request: " + element.toJSON().toString());
+	                    response = client.execute(post);
+                    }
                     /* Checking for successful response */
                     if (response.getStatusLine().getStatusCode() >= 200
                             && response.getStatusLine().getStatusCode() < 300) {

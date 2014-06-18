@@ -154,6 +154,7 @@ public class Participant extends SendReceiveModel {
 		mRemoteId = id;
 	}
 	
+	@Override
 	public Long getRemoteId() {
 		return mRemoteId;
 	}

@@ -56,7 +56,7 @@ public class ParticipantProperty extends SendReceiveModel {
             jsonObject.put("property_id", getProperty().getRemoteId());
             jsonObject.put("value", getValue());
             jsonObject.put("uuid", getUUID());
-            
+
             json.put("participant_property", jsonObject);
         } catch (JSONException je) {
             Log.e(TAG, "JSON exception", je);
@@ -111,6 +111,7 @@ public class ParticipantProperty extends SendReceiveModel {
     	mRemoteId = id;
     }
     
+    @Override
     public Long getRemoteId() {
     	return mRemoteId;
     }
