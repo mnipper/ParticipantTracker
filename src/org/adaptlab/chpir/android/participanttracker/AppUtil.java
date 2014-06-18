@@ -53,7 +53,7 @@ public class AppUtil {
 		ActiveRecordCloudSync.addSendReceiveTable("participant_properties", ParticipantProperty.class);
 	}
     
-    private static void syncData() {
+    public static void syncData() {
 		new FetchDataTask(mContext).execute();
 		new SendDataTask(mContext).execute();
 	}

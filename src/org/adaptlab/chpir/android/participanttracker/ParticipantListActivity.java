@@ -3,6 +3,8 @@ package org.adaptlab.chpir.android.participanttracker;
 import java.util.List;
 import java.util.Locale;
 
+import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
+import org.adaptlab.chpir.android.activerecordcloudsync.NetworkNotificationUtils;
 import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
 
@@ -10,9 +12,11 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -109,12 +113,40 @@ public class ParticipantListActivity extends FragmentActivity implements
     	case R.id.action_settings:
     		displayPassWordPrompt();
     		return true;
+    	case R.id.menu_item_refresh:
+    		new RefreshParticipantsTask().execute();
+    		return true;
     	default:
     		return super.onOptionsItemSelected(item);
     	}
     }
 
-    private void displayPassWordPrompt() {
+    private class RefreshParticipantsTask extends AsyncTask<Void, Void, Void> {
+    	ProgressDialog mProgressDialog;
+		@Override
+        protected void onPreExecute() {
+            mProgressDialog = ProgressDialog.show(ParticipantListActivity.this, 
+            		getString(R.string.participants_loading_header), 
+            		getString(R.string.participants_loading_message)) ;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (NetworkNotificationUtils.checkForNetworkErrors(ParticipantListActivity.this)) {
+                ActiveRecordCloudSync.syncReceiveTables(ParticipantListActivity.this);
+				ActiveRecordCloudSync.syncFetchSendReceiveTables(ParticipantListActivity.this);
+				ActiveRecordCloudSync.syncPushSendReceiveTables(ParticipantListActivity.this);
+            }
+            return null;
+        }
+        
+        @Override
+        protected void onPostExecute(Void param) {
+            mProgressDialog.dismiss();   
+        }        
+    }
+
+	private void displayPassWordPrompt() {
     	final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         new AlertDialog.Builder(this)
