@@ -1,18 +1,22 @@
 package org.adaptlab.chpir.android.participanttracker;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import org.adaptlab.chpir.android.participanttracker.models.Participant;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,9 +25,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +36,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,13 +101,6 @@ public class ParticipantListActivity extends FragmentActivity implements
                     .setText(mSectionsPagerAdapter.getPageTitle(i))
                     .setTabListener(this));
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.participant_list, menu);
-        return true;
     }
     
     @Override
@@ -198,6 +198,26 @@ public class ParticipantListActivity extends FragmentActivity implements
          */
         public static final String ARG_SECTION_NUMBER = "section_number";
         private Button mNewParticipantButton;
+        private String currentQuery = null;
+
+        final private OnQueryTextListener queryListener = new OnQueryTextListener() {       
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {              
+                    currentQuery = null;
+                } else {
+                    currentQuery = newText;
+                }
+                
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                setParticipantListAdapter(currentQuery);
+                return false;
+            }
+        };
         
         public ParticipantListFragment() {          
         }
@@ -210,8 +230,9 @@ public class ParticipantListActivity extends FragmentActivity implements
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
+            setHasOptionsMenu(true);
                        
-            setParticipantListAdapter();
+            setParticipantListAdapter(currentQuery);
         }
 
         @Override
@@ -241,10 +262,23 @@ public class ParticipantListActivity extends FragmentActivity implements
             startActivity(i);
         }   
         
+        @Override 
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.participant_list, menu); 
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+                SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+                searchView.setIconifiedByDefault(true);
+                searchView.setOnQueryTextListener(queryListener);
+            }
+        }
+        
         @Override
         public void onResume() {
             super.onResume();
-            setParticipantListAdapter();
+            setParticipantListAdapter(currentQuery);
         }
         
         private ParticipantType getParticipantType() {
@@ -258,13 +292,19 @@ public class ParticipantListActivity extends FragmentActivity implements
 
             if (requestCode == CREATE_NEW_PARTICIPANT) {
                 if (resultCode == RESULT_OK) {
-                    setParticipantListAdapter();
+                    setParticipantListAdapter(currentQuery);
                 }
             }
         }
         
-        private void setParticipantListAdapter() {
-            List<Participant> participants = Participant.getAllByParticipantType(getParticipantType());
+        private void setParticipantListAdapter(String query) {
+            List<Participant> participants;
+            if (query != null) {
+                participants = Participant.getAllByParticipantType(getParticipantType(), query);   
+            } else {
+                participants = Participant.getAllByParticipantType(getParticipantType());
+            }
+            
             setListAdapter(new ParticipantAdapter(getActivity(), participants));
         }
     }
