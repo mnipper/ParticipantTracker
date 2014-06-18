@@ -78,6 +78,18 @@ public class Participant extends SendReceiveModel {
         return new Select().from(Participant.class).where("ParticipantType = ?", participantType.getId()).orderBy("Id DESC").execute();
     }
     
+    public static List<Participant> getAllByParticipantType(ParticipantType participantType, String query) {
+        return new Select("Participant.*")
+                .distinct()
+                .from(Participant.class)
+                .innerJoin(ParticipantProperty.class)
+                .on("Participant.Id = ParticipantProperty.Participant AND Participant.ParticipantType = ? AND ParticipantProperty.Value LIKE ?",
+                        participantType.getId(),
+                        "%" + query + "%")
+                .orderBy("Participant.Id DESC")
+                .execute();
+    }
+    
     public static int getCount() {
         return getAll().size();
     }

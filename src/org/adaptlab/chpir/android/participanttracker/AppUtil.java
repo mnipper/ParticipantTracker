@@ -85,11 +85,14 @@ public class AppUtil {
                 ageProperty.save();
                 dateProperty.save();
 
-                for (int i = 0; i < 4; i++) {  
+                for (int i = 0; i < 10; i++) {  
                     Participant participant = new Participant(participantType);
                     participant.save();
                     
                     ParticipantProperty participantProperty = new ParticipantProperty(participant, nameProperty, participantType + " " + i); 
+                    participantProperty.save();
+                    
+                    participantProperty = new ParticipantProperty(participant, ageProperty, String.valueOf(i)); 
                     participantProperty.save();
                 } 
             } 
