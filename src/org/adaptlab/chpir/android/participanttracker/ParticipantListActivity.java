@@ -28,6 +28,7 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,6 +107,13 @@ public class ParticipantListActivity extends FragmentActivity implements
     }
     
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.participant_list, menu);
+        return true;
+    }
+    
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {	
     	case R.id.action_settings:
@@ -113,7 +121,6 @@ public class ParticipantListActivity extends FragmentActivity implements
     		return true;
     	case R.id.menu_item_refresh:
     		authenticateUser();
-    		//new RefreshParticipantsTask().execute();
     		return true;
     	default:
     		return super.onOptionsItemSelected(item);
@@ -124,31 +131,6 @@ public class ParticipantListActivity extends FragmentActivity implements
     	Intent i = new Intent(ParticipantListActivity.this, LoginActivity.class);
         startActivity(i);		
 	}
-
-	private class RefreshParticipantsTask extends AsyncTask<Void, Void, Void> {
-    	ProgressDialog mProgressDialog;
-		@Override
-        protected void onPreExecute() {
-            mProgressDialog = ProgressDialog.show(ParticipantListActivity.this, 
-            		getString(R.string.participants_loading_header), 
-            		getString(R.string.participants_loading_message)) ;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            if (NetworkNotificationUtils.checkForNetworkErrors(ParticipantListActivity.this)) {
-                ActiveRecordCloudSync.syncReceiveTables(ParticipantListActivity.this);
-				ActiveRecordCloudSync.syncFetchSendReceiveTables(ParticipantListActivity.this);
-				ActiveRecordCloudSync.syncPushSendReceiveTables(ParticipantListActivity.this);
-            }
-            return null;
-        }
-        
-        @Override
-        protected void onPostExecute(Void param) {
-            mProgressDialog.dismiss();   
-        }        
-    }
 
 	private void displayPassWordPrompt() {
     	final EditText input = new EditText(this);
@@ -266,15 +248,12 @@ public class ParticipantListActivity extends FragmentActivity implements
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             setHasOptionsMenu(true);
-                       
             setParticipantListAdapter(currentQuery);
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(
-                    R.layout.fragment_participant_list_dummy, container, false);
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_participant_list_dummy, container, false);
             
             mNewParticipantButton = (Button) rootView.findViewById(R.id.new_participant_button);            
             mNewParticipantButton.setText(getString(R.string.new_participant_prefix) + getParticipantType().getLabel());
@@ -299,8 +278,6 @@ public class ParticipantListActivity extends FragmentActivity implements
         
         @Override 
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            inflater.inflate(R.menu.participant_list, menu); 
-            
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
                 SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();

@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 public class AdminFragment extends Fragment {
 	private EditText mDeviceIdentifierEditText;
-    private EditText mSyncIntervalEditText;
     private EditText mApiEndPointEditText;
     private TextView mLastUpdateTextView;
     private TextView mBackendApiKeyTextView;
@@ -33,9 +32,6 @@ public class AdminFragment extends Fragment {
 		mDeviceIdentifierEditText = (EditText) view.findViewById(R.id.device_identifier_edit_text);
         mDeviceIdentifierEditText.setText(getAdminSettingsInstanceDeviceId());
         
-        mSyncIntervalEditText = (EditText) view.findViewById(R.id.sync_interval_edit_text);
-        mSyncIntervalEditText.setText(getAdminSettingsInstanceSyncInterval());
-        
         mApiEndPointEditText = (EditText) view.findViewById(R.id.api_endpoint_edit_text);
         mApiEndPointEditText.setText(getAdminSettingsInstanceApiUrl());
         
@@ -52,10 +48,7 @@ public class AdminFragment extends Fragment {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AdminSettings.getInstance().setDeviceIdentifier(mDeviceIdentifierEditText.getText().toString());              
-                AdminSettings.getInstance().setSyncInterval(Integer.parseInt(mSyncIntervalEditText.getText().toString()));                
                 AdminSettings.getInstance().setApiUrl(mApiEndPointEditText.getText().toString());
-                PollService.setPollInterval(AdminSettings.getInstance().getSyncInterval());
-                PollService.restartServiceAlarm(getActivity().getApplicationContext());
                 ActiveRecordCloudSync.setEndPoint(getAdminSettingsInstanceApiUrl());
                 getActivity().finish();
             }

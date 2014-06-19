@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.adaptlab.chpir.android.participanttracker.R;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
@@ -21,6 +23,8 @@ public class ActiveRecordCloudSync {
     private static String mEndPoint;        // The remote API endpoint url
     private static String mAccessToken;     // API Access Key
     private static int mVersionCode;        // App version code from Manifest
+    private static String mAuthToken;
+    private static String mUserEmail;
     
     /**
      * Add a ReceiveTable.  A ReceiveTable is an active record model class that extends the
@@ -49,34 +53,46 @@ public class ActiveRecordCloudSync {
         return mEndPoint;
     }
     
-    public static void syncReceiveTables(Context context) {
-        NetworkNotificationUtils.showNotification(context, android.R.drawable.stat_sys_download, R.string.sync_notification_text);
-        for (Map.Entry<String, Class<? extends ReceiveModel>> entry : mReceiveTables.entrySet()) {
+    public static void syncTables(Context context) {
+        
+    	NetworkNotificationUtils.showNotification(context, android.R.drawable.stat_sys_download, R.string.sync_notification_text);
+        
+    	for (Map.Entry<String, Class<? extends ReceiveModel>> entry : mReceiveTables.entrySet()) {
             Log.i(TAG, "Syncing " + entry.getValue() + " from remote table " + entry.getKey());
             HttpFetchr httpFetchr = new HttpFetchr(entry.getKey(), entry.getValue());
             httpFetchr.fetch();
         }
-        NetworkNotificationUtils.showNotification(context, android.R.drawable.stat_sys_download_done, R.string.sync_notification_complete_text);
-    }
-    
-    public static void syncFetchSendReceiveTables(Context context) {
-        NetworkNotificationUtils.showNotification(context, android.R.drawable.stat_sys_download, R.string.sync_notification_text);
+        
         for (Map.Entry<String, Class<? extends SendReceiveModel>> entry : mSendReceiveTables.entrySet()) {
             Log.i(TAG, "Syncing " + entry.getValue() + " to remote table " + entry.getKey());
             SendReceiveFetchr httpFetchr = new SendReceiveFetchr(entry.getKey(), entry.getValue());
             httpFetchr.fetch();
         }
-        NetworkNotificationUtils.showNotification(context, android.R.drawable.stat_sys_download_done, R.string.sync_notification_complete_text);
-    }
-    
-    public static void syncPushSendReceiveTables(Context context) {
-    	NetworkNotificationUtils.showNotification(context, android.R.drawable.stat_sys_download, R.string.sync_notification_text);
+        
         for (Map.Entry<String, Class<? extends SendReceiveModel>> entry : mSendReceiveTables.entrySet()) {
             Log.i(TAG, "Syncing " + entry.getValue() + " to remote table " + entry.getKey());
             HttpPushr httpPushr = new HttpPushr(entry.getKey(), entry.getValue());
             httpPushr.push();
         }
+        
         NetworkNotificationUtils.showNotification(context, android.R.drawable.stat_sys_download_done, R.string.sync_notification_complete_text);
+    }
+    
+    public static void authenticateUser(String email, String password) {
+    	setUserEmail(email);
+    	JSONObject json = new JSONObject();
+    	try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("email", email);
+            jsonObject.put("password", password);
+            
+            json.put("user", jsonObject);
+        } catch (JSONException je) {
+            Log.e(TAG, "JSON exception", je);
+        }
+
+    	HttpLogin httpLogin = new HttpLogin();
+    	httpLogin.login(json);
     }
     
     public static boolean isApiAvailable() {
@@ -119,7 +135,24 @@ public class ActiveRecordCloudSync {
      * before allowing an update.
      */
     public static String getParams() {
-        return "?access_token=" + getAccessToken() + "&version_code=" + getVersionCode();
+        return "?access_token=" + getAccessToken() + "&version_code=" + getVersionCode() 
+        		+ "&auth_token=" + getAuthToken() +"&user_email=" + getUserEmail();
+    }
+    
+    public static void setAuthToken(String token) {
+    	mAuthToken = token;
+    }
+    
+    public static String getAuthToken() {
+    	return mAuthToken;
+    }
+    
+    public static void setUserEmail(String email) {
+    	mUserEmail = email;
+    }
+    
+    public static String getUserEmail() {
+    	return mUserEmail;
     }
     
     private static String getPingAddress() {
@@ -131,7 +164,6 @@ public class ActiveRecordCloudSync {
 
     private static int ping(String url, int timeout) {
         if (url == null) return -1;
-        url = url.replaceFirst("https", "http");
         url = url + getParams();
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
