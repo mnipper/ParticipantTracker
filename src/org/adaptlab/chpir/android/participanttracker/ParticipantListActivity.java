@@ -112,14 +112,20 @@ public class ParticipantListActivity extends FragmentActivity implements
     		displayPassWordPrompt();
     		return true;
     	case R.id.menu_item_refresh:
-    		new RefreshParticipantsTask().execute();
+    		authenticateUser();
+    		//new RefreshParticipantsTask().execute();
     		return true;
     	default:
     		return super.onOptionsItemSelected(item);
     	}
     }
 
-    private class RefreshParticipantsTask extends AsyncTask<Void, Void, Void> {
+    private void authenticateUser() {
+    	Intent i = new Intent(ParticipantListActivity.this, LoginActivity.class);
+        startActivity(i);		
+	}
+
+	private class RefreshParticipantsTask extends AsyncTask<Void, Void, Void> {
     	ProgressDialog mProgressDialog;
 		@Override
         protected void onPreExecute() {

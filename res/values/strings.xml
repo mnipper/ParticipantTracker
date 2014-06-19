@@ -30,4 +30,6 @@
     <string name="version_code">Version Code: </string>
     <string name="participants_loading_header">Loading Participants</string>
     <string name="participants_loading_message">Pleasing wait a moment</string>
+    <string name="login_button">Login</string>
+    <string name="login_label_message">Please login in order to sync participants</string>
 </resources>

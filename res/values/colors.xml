@@ -3,4 +3,6 @@
     <color name="emphasis">#31b6e7</color>
     <color name="actionbar_text">#000000</color>
     <color name="actionbar_background">#8a95b2</color>
+    <color name="login_background">#336600</color>
+    <color name="login_label_color">#0b8db3</color>
 </resources>

@@ -21,7 +21,8 @@ public class AdminFragment extends Fragment {
     private TextView mBackendApiKeyTextView;
     private TextView mVersionCodeTextView;
     private Button mSaveButton;
-	@Override
+	
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
