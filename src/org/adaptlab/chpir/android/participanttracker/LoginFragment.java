@@ -8,7 +8,9 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,20 +42,31 @@ public class LoginFragment extends Fragment {
 		mLoginButton = (Button) view.findViewById(R.id.remote_login_button);
 		mLoginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	if (mEmailAddress.getText().toString() == null || mPassword.getText().toString() == null) {
-            		new AlertDialog.Builder(getActivity().getApplicationContext())
-    				.setMessage(R.string.email_password_blank)
+            	if (isValidEmail(mEmailAddress.getText()) && passwordExists(mPassword.getText())) {
+            		new RemoteAuthenticationTask().execute();
+            	} else {
+               		new AlertDialog.Builder(getActivity())
+    				.setMessage(R.string.invalid_email_or_password)
     				.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() { 
     					public void onClick(DialogInterface dialog, int button) {}
     				}).show();
-            	} else {
-            		new RemoteAuthenticationTask().execute();
-	            	getActivity().finish();
-            	}
+            	} 
             }
 		});
 		
 		return view;
+	}
+	
+	private boolean isValidEmail(CharSequence target) {
+	    if (target == null) 
+	        return false;
+	    return Patterns.EMAIL_ADDRESS.matcher(target).matches();
+	}
+	
+	private boolean passwordExists(CharSequence password) {
+		if (TextUtils.isEmpty(password))
+			return false;
+		return true;
 	}
 	
 	private class RemoteAuthenticationTask extends AsyncTask<Void, Void, Void> {
@@ -72,15 +85,14 @@ public class LoginFragment extends Fragment {
 			Log.i(TAG, "authenticated user and token is: " + ActiveRecordCloudSync.getAuthToken());
 			if (ActiveRecordCloudSync.getAuthToken() != null) {
 				new SyncTablesTask().execute();
+	        	getActivity().finish();
 			} else {
-				AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-				dialog.setMessage(R.string.user_password_mismatch);
-				dialog.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() { 
+				new AlertDialog.Builder(getActivity())
+				.setMessage(R.string.email_password_mismatch)
+				.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() { 
 					public void onClick(DialogInterface dialog, int button) {}
-				});
-				dialog.create();
-				dialog.show();
-			}  
+				}).show();
+			}
 		}      
 	}
 	
