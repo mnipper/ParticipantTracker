@@ -3,8 +3,6 @@ package org.adaptlab.chpir.android.participanttracker;
 import java.util.List;
 import java.util.Locale;
 
-import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
-import org.adaptlab.chpir.android.activerecordcloudsync.NetworkNotificationUtils;
 import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
 
@@ -12,12 +10,10 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,6 +43,7 @@ import android.widget.Toast;
 public class ParticipantListActivity extends FragmentActivity implements
         ActionBar.TabListener {
     private static final String TAG = "ParticipantListActivity";
+    public final static int DATA_CHANGED = 0;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -62,6 +59,8 @@ public class ParticipantListActivity extends FragmentActivity implements
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    
+   ActionBar mActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +70,8 @@ public class ParticipantListActivity extends FragmentActivity implements
         setContentView(R.layout.activity_participant_list);
 
         // Set up the action bar.
-        final ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        mActionBar = getActionBar();
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the app.
@@ -90,7 +89,7 @@ public class ParticipantListActivity extends FragmentActivity implements
                 .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                     @Override
                     public void onPageSelected(int position) {
-                        actionBar.setSelectedNavigationItem(position);
+                        mActionBar.setSelectedNavigationItem(position);
                     }
                 });
 
@@ -100,7 +99,7 @@ public class ParticipantListActivity extends FragmentActivity implements
             // the adapter. Also specify this Activity object, which implements
             // the TabListener interface, as the callback (listener) for when
             // this tab is selected.
-            actionBar.addTab(actionBar.newTab()
+            mActionBar.addTab(mActionBar.newTab()
                     .setText(mSectionsPagerAdapter.getPageTitle(i))     
                     .setTabListener(this));
         }
@@ -129,8 +128,28 @@ public class ParticipantListActivity extends FragmentActivity implements
 
     private void authenticateUser() {
     	Intent i = new Intent(ParticipantListActivity.this, LoginActivity.class);
-        startActivity(i);		
+        startActivityForResult(i, DATA_CHANGED);		
 	}
+    
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == DATA_CHANGED) {
+            if (resultCode == RESULT_OK) {
+                mSectionsPagerAdapter.notifyDataSetChanged();
+                refreshSectionTabs();
+            }
+        }
+    }
+    
+    private void refreshSectionTabs() {
+    	mActionBar.removeAllTabs();
+    	for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+            mActionBar.addTab(mActionBar.newTab()
+                    .setText(mSectionsPagerAdapter.getPageTitle(i))     
+                    .setTabListener(this));
+        }
+    }
 
 	private void displayPassWordPrompt() {
     	final EditText input = new EditText(this);

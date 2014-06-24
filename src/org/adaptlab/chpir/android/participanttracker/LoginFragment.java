@@ -3,7 +3,9 @@ package org.adaptlab.chpir.android.participanttracker;
 import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
 import org.adaptlab.chpir.android.activerecordcloudsync.NetworkNotificationUtils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -85,7 +87,8 @@ public class LoginFragment extends Fragment {
 			Log.i(TAG, "authenticated user and token is: " + ActiveRecordCloudSync.getAuthToken());
 			if (ActiveRecordCloudSync.getAuthToken() != null) {
 				new SyncTablesTask().execute();
-	        	getActivity().finish();
+//				getActivity().setResult(Activity.RESULT_OK);
+//				getActivity().finish();
 			} else {
 				new AlertDialog.Builder(getActivity())
 				.setMessage(R.string.email_password_mismatch)
@@ -97,13 +100,31 @@ public class LoginFragment extends Fragment {
 	}
 	
 	private class SyncTablesTask extends AsyncTask<Void, Void, Void> {		
-        @Override
+		ProgressDialog mProgressDialog;
+		
+		@Override
+		protected void onPreExecute() {
+			mProgressDialog = ProgressDialog.show(
+					getActivity(), 
+					getString(R.string.participants_loading_header), 
+					getString(R.string.participants_loading_message)
+			);
+		}
+		
+		@Override
         protected Void doInBackground(Void... params) {
             if (NetworkNotificationUtils.checkForNetworkErrors(getActivity())) {
                 ActiveRecordCloudSync.syncTables(getActivity());
             }
             return null;
-        }      
+        }
+        
+        @Override
+		protected void onPostExecute(Void param) {
+        	getActivity().setResult(Activity.RESULT_OK);
+        	mProgressDialog.dismiss();
+        	getActivity().finish();
+        }
     }
 	
 }
