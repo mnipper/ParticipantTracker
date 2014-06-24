@@ -19,7 +19,7 @@ public class Participant extends SendReceiveModel {
     
     @Column(name = "SentToRemote")
     private boolean mSent;
-    @Column(name = "ParticipantType")
+    @Column(name = "ParticipantType", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private ParticipantType mParticipantType;
     @Column(name = "UUID")
     private String mUUID;
@@ -102,6 +102,10 @@ public class Participant extends SendReceiveModel {
         return new Select().from(Participant.class).where("Id = ?", id).executeSingle();
     }
     
+    public static Participant findByRemoteId(Long remoteId) {
+    	return new Select().from(Participant.class).where("RemoteId = ?", remoteId).executeSingle();
+    }
+    
     public static Participant findByUUID(String uuid) {
     	return new Select().from(Participant.class).where("UUID = ?", uuid).executeSingle();
     }
@@ -151,11 +155,19 @@ public class Participant extends SendReceiveModel {
 			Long remoteId = jsonObject.getLong("id");
 			participant.setRemoteId(remoteId);
 			Long participantTypeId = jsonObject.getLong("participant_type_id");
-			ParticipantType participantType = ParticipantType.findById(participantTypeId);
+			ParticipantType participantType = ParticipantType.findByRemoteId(participantTypeId); 
 			if (participantType != null) {
 				participant.setParticipantType(participantType);
 			}
-			participant.save();
+			if (jsonObject.isNull("deleted_at")) {
+				participant.save();
+			} else {
+				Log.i(TAG, "deleted participant: " + jsonObject.toString());
+				Participant p = Participant.findByUUID(uuid);
+				if (p != null) {
+					p.delete();
+				}
+			}
 		} catch (JSONException je) {
 			Log.e(TAG, "Error parsing object json", je);
 		}

@@ -13,7 +13,7 @@ import org.json.JSONException;
 import android.util.Log;
 
 public class SendReceiveFetchr {
-	private static final String TAG = "HttpFetchr";
+	private static final String TAG = "SendReceiveFetchr";
     private Class <? extends SendReceiveModel> mReceiveTableClass;
     private String mRemoteTableName;
     
