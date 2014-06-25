@@ -44,13 +44,13 @@ public class NetworkNotificationUtils {
      */
     public static boolean checkForNetworkErrors(Context context) {
         if (!isNetworkAvailable(context.getApplicationContext())) {
-            Log.i(TAG, "Network is not available, short circuiting PollService...");
+            Log.i(TAG, "Network is not available...");
             showNotification(context, android.R.drawable.ic_dialog_alert, R.string.network_unavailable);
-//        } else if (!ActiveRecordCloudSync.isApiAvailable()) { //TODO FIX AUTH_TOKEN
-//            Log.i(TAG, "Api endpoint is not available, short circuiting PollService...");
-//            showNotification(context, android.R.drawable.ic_dialog_alert, R.string.api_unavailable);
+        } else if (!ActiveRecordCloudSync.isApiAvailable()) { 
+            Log.i(TAG, "Api endpoint is not available...");
+            showNotification(context, android.R.drawable.ic_dialog_alert, R.string.api_unavailable);
         } else if (!ActiveRecordCloudSync.isVersionAcceptable()) {
-            Log.i(TAG, "Android version code is not acceptable, short circuting PollService...");
+            Log.i(TAG, "Android version code is not acceptable...");
             showNotification(context, android.R.drawable.ic_dialog_alert, R.string.unacceptable_version_code);
         } else {
             return true;
