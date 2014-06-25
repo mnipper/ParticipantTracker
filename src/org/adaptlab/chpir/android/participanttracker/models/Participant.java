@@ -183,4 +183,10 @@ public class Participant extends SendReceiveModel {
 		return mRemoteId;
 	}
 	
+	public String getMetadata() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("participant_uuid", getUUID());
+        jsonObject.put("participant_type", getParticipantType().getLabel());
+        return jsonObject.toString();
+	}
 }
