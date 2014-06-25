@@ -18,9 +18,9 @@ public class ParticipantProperty extends SendReceiveModel {
     
     @Column(name = "SentToRemote")
     private boolean mSent;
-    @Column(name = "Participant")
+    @Column(name = "Participant", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private Participant mParticipant;
-    @Column(name = "Property")
+    @Column(name = "Property", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private Property mProperty;
     @Column(name = "Value")
     private String mValue;
@@ -52,8 +52,10 @@ public class ParticipantProperty extends SendReceiveModel {
         
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("participant_uuid", getParticipant().getUUID());
-            jsonObject.put("property_id", getProperty().getRemoteId());
+            if (getParticipant() != null)
+            	jsonObject.put("participant_uuid", getParticipant().getUUID());
+            if (getProperty() != null)
+            	jsonObject.put("property_id", getProperty().getRemoteId());
             jsonObject.put("value", getValue());
             jsonObject.put("uuid", getUUID());
 
@@ -116,7 +118,7 @@ public class ParticipantProperty extends SendReceiveModel {
     	return mRemoteId;
     }
     
-    public static ParticipantProperty findById(Long id) {
+    public static ParticipantProperty findByRemoteId(Long id) {
     	return new Select().from(ParticipantProperty.class).where("RemoteId = ?", id).executeSingle();
     }
     
@@ -144,7 +146,14 @@ public class ParticipantProperty extends SendReceiveModel {
 				participantProperty.setProperty(property);
 			}
 			participantProperty.setValue(jsonObject.getString("value"));
-			participantProperty.save();
+			if (jsonObject.isNull("deleted_at")) {
+				participantProperty.save();
+			} else {
+				ParticipantProperty pp = ParticipantProperty.findByUUID(uuid);
+				if (pp != null) {
+					pp.delete();
+				}
+			}
 			
 		} catch(JSONException je) {
 			Log.e(TAG, "Error parsing object json", je);

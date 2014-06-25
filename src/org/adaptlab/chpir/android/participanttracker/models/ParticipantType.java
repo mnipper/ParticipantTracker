@@ -28,9 +28,7 @@ public class ParticipantType extends ReceiveModel {
     @Override
     public void createObjectFromJSON(JSONObject jsonObject) {
         try {
-            Long remoteId = jsonObject.getLong("id");
-            
-            // If a ParticipantType already exists, update it from the remote
+            Long remoteId = jsonObject.getLong("id");            
             ParticipantType participantType = ParticipantType.findByRemoteId(remoteId);
             if (participantType == null) {
                 participantType = this;
@@ -39,7 +37,14 @@ public class ParticipantType extends ReceiveModel {
             Log.i(TAG, "Creating object from JSON Object: " + jsonObject);
             participantType.setLabel(jsonObject.getString("label"));
             participantType.setRemoteId(remoteId);
-            participantType.save();
+            if (jsonObject.isNull("deleted_at")) {
+            	participantType.save();
+            } else {
+            	ParticipantType pt = ParticipantType.findByRemoteId(remoteId);
+            	if (pt != null) {
+            		pt.delete();
+            	}
+            }
         } catch (JSONException je) {
             Log.e(TAG, "Error parsing object json", je);
         }    

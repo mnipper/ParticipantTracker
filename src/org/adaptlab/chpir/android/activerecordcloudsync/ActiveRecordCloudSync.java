@@ -64,7 +64,7 @@ public class ActiveRecordCloudSync {
         }
         
         for (Map.Entry<String, Class<? extends SendReceiveModel>> entry : mSendReceiveTables.entrySet()) {
-            Log.i(TAG, "Syncing " + entry.getValue() + " to remote table " + entry.getKey());
+            Log.i(TAG, "Syncing " + entry.getValue() + " from remote table " + entry.getKey());
             SendReceiveFetchr httpFetchr = new SendReceiveFetchr(entry.getKey(), entry.getValue());
             httpFetchr.fetch();
         }

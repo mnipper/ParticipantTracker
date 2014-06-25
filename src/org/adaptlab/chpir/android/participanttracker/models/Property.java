@@ -26,7 +26,7 @@ public class Property extends ReceiveModel {
     private PropertyType mTypeOf;
     @Column(name = "Required")
     private boolean mRequired;
-    @Column(name = "ParticipantType")
+    @Column(name = "ParticipantType", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private ParticipantType mParticipantType;
     @Column(name = "UseAsLabel")
     private boolean mUseAsLabel;
@@ -47,8 +47,6 @@ public class Property extends ReceiveModel {
     public void createObjectFromJSON(JSONObject jsonObject) {
         try {
             Long remoteId = jsonObject.getLong("id");
-            
-            // If a Property already exists, update it from the remote
             Property property = Property.findByRemoteId(remoteId);
             if (property == null) {
                 property = this;
@@ -60,7 +58,15 @@ public class Property extends ReceiveModel {
             property.setTypeOf(jsonObject.getString("type_of"));
             property.setRequired(jsonObject.getBoolean("required"));
             property.setParticipantType(ParticipantType.findByRemoteId(jsonObject.getLong("participant_type_id")));
-            property.save();
+            if (jsonObject.isNull("deleted_at")) {
+            	property.save();
+            } else {
+            	Property py = Property.findByRemoteId(remoteId);
+            	if (py != null) {
+            		py.delete();
+            	}
+            }
+            
         } catch (JSONException je) {
             Log.e(TAG, "Error parsing object json", je);
         } 

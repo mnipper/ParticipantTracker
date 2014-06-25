@@ -37,21 +37,17 @@ public class AppUtil {
 
 		ActiveRecordCloudSync.setAccessToken(ACCESS_TOKEN);
 		ActiveRecordCloudSync.setVersionCode(AppUtil.getVersionCode(context));
-		ActiveRecordCloudSync.setEndPoint(AdminSettings.getInstance()
-				.getApiUrl());
+		ActiveRecordCloudSync.setEndPoint(AdminSettings.getInstance().getApiUrl());
 		addDataTables();
 		seedDb();
 
 	}
 
 	private static void addDataTables() {
-		ActiveRecordCloudSync.addReceiveTable("participant_types",
-				ParticipantType.class);
+		ActiveRecordCloudSync.addReceiveTable("participant_types", ParticipantType.class);
 		ActiveRecordCloudSync.addReceiveTable("properties", Property.class);
-		ActiveRecordCloudSync.addSendReceiveTable("participants",
-				Participant.class);
-		ActiveRecordCloudSync.addSendReceiveTable("participant_properties",
-				ParticipantProperty.class);
+		ActiveRecordCloudSync.addSendReceiveTable("participants", Participant.class);
+		ActiveRecordCloudSync.addSendReceiveTable("participant_properties", ParticipantProperty.class);
 	}
 
 	public static void seedDb() {

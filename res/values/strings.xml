@@ -32,6 +32,6 @@
     <string name="participants_loading_message">Pleasing wait a moment</string>
     <string name="login_button">Login</string>
     <string name="login_label_message">Please login in order to sync participants</string>
-    <string name="user_password_mismatch">No user with that email and password combination exists</string>
-    <string name="email_password_blank">Email or Password cannot be blank</string>
+    <string name="email_password_mismatch">Invalid email and password combination!</string>
+    <string name="invalid_email_or_password">Invalid email or password!</string>
 </resources>
