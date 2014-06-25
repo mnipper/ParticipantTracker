@@ -3,6 +3,7 @@ package org.adaptlab.chpir.android.participanttracker;
 import org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver;
 import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
+import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +33,7 @@ public class ParticipantDetailFragment extends Fragment {
             "org.adaptlab.chpir.android.survey.metadata";
     
     private Participant mParticipant;
-    private static String sParticipantUUID;
+    private static String sParticipantMetadata;
     private LinearLayout mParticipantPropertiesContainer;
     private Button mNewSurveyButton;
     private static Activity sActivity;
@@ -43,14 +45,18 @@ public class ParticipantDetailFragment extends Fragment {
         
         if (savedInstanceState != null) {
             mParticipant = Participant.findById(savedInstanceState.getLong(EXTRA_PARTICIPANT_ID));
-            sParticipantUUID = mParticipant.getUUID();
         } else {
             Long participantId = getActivity().getIntent().getLongExtra(EXTRA_PARTICIPANT_ID, -1);
             if (participantId == -1) return;
 
             mParticipant = Participant.findById(participantId);
-            sParticipantUUID = mParticipant.getUUID();
         }
+        
+        try {
+            sParticipantMetadata = mParticipant.getMetadata();
+        } catch (JSONException e) {
+            Log.e(TAG, "Could not parse participant metadata for " + mParticipant.getId());
+        }  
         
         getActivity().setTitle(mParticipant.getLabel());
     }
@@ -99,7 +105,7 @@ public class ParticipantDetailFragment extends Fragment {
                 Intent i = new Intent();
                 i.setAction(InstrumentListReceiver.START_SURVEY);
                 i.putExtra(InstrumentListReceiver.START_SURVEY_INSTRUMENT_ID, instrumentIdList[which]);
-                i.putExtra(EXTRA_PARTICIPANT_METADATA, getParticipantMetadataJSON());
+                i.putExtra(EXTRA_PARTICIPANT_METADATA, sParticipantMetadata);
                 sActivity.sendBroadcast(i);
                 dialog.cancel();
                 sActivity.finish();
@@ -107,10 +113,6 @@ public class ParticipantDetailFragment extends Fragment {
         }); 
         
         builder.show();
-    }
-    
-    private static String getParticipantMetadataJSON() {
-        return "{\"participant_uuid\": \"" + sParticipantUUID + "\"}";
     }
     
     private void newSurvey() {
