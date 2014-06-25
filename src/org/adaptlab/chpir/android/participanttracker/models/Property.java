@@ -58,6 +58,7 @@ public class Property extends ReceiveModel {
             property.setTypeOf(jsonObject.getString("type_of"));
             property.setRequired(jsonObject.getBoolean("required"));
             property.setParticipantType(ParticipantType.findByRemoteId(jsonObject.getLong("participant_type_id")));
+            property.setUseAsLabel(jsonObject.getBoolean("use_as_label"));
             if (jsonObject.isNull("deleted_at")) {
             	property.save();
             } else {
