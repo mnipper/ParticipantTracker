@@ -87,8 +87,6 @@ public class LoginFragment extends Fragment {
 			Log.i(TAG, "authenticated user and token is: " + ActiveRecordCloudSync.getAuthToken());
 			if (ActiveRecordCloudSync.getAuthToken() != null) {
 				new SyncTablesTask().execute();
-//				getActivity().setResult(Activity.RESULT_OK);
-//				getActivity().finish();
 			} else {
 				new AlertDialog.Builder(getActivity())
 				.setMessage(R.string.email_password_mismatch)
@@ -121,10 +119,21 @@ public class LoginFragment extends Fragment {
         
         @Override
 		protected void onPostExecute(Void param) {
+        	new LogoutUserTask().execute();
         	getActivity().setResult(Activity.RESULT_OK);
         	mProgressDialog.dismiss();
         	getActivity().finish();
         }
     }
+	
+	private class LogoutUserTask extends AsyncTask<Void, Void, Void> {		
+		@Override
+		protected Void doInBackground(Void... params) {
+			if (NetworkNotificationUtils.checkForNetworkErrors(getActivity())) {
+	        	ActiveRecordCloudSync.logoutUser();
+			}
+			return null;
+		}
+	}
 	
 }
