@@ -141,7 +141,9 @@ public class ParticipantProperty extends SendReceiveModel {
 			if (participant != null) {
 				participantProperty.setParticipant(participant);
 			}
+			
 			Property property = Property.findByRemoteId(jsonObject.getLong("property_id"));
+			
 			if (property != null) {
 				participantProperty.setProperty(property);
 			}
