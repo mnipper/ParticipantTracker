@@ -15,6 +15,8 @@ public class AdminSettings extends Model {
     private int mSyncInterval;
     @Column(name = "ApiUrl")
     private String mApiUrl;
+    @Column(name="LastUpdateTime")
+    private String mLastUpdateTime;
     
     private static final String TAG = "AdminSettings";
 	private static AdminSettings adminSettings;
@@ -65,5 +67,12 @@ public class AdminSettings extends Model {
     public String getApiUrl() {
         return mApiUrl;
     }
+    
+    public void setLastUpdateTime(String time) {
+    	mLastUpdateTime = time;
+    }
 	
+    public String getLastUpdateTime() {
+    	return mLastUpdateTime;
+    }
 }

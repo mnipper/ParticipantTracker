@@ -1,8 +1,10 @@
 package org.adaptlab.chpir.android.activerecordcloudsync;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
+import org.adaptlab.chpir.android.participanttracker.models.AdminSettings;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -66,6 +68,7 @@ public class HttpPushr {
                                         + element.toJSON());
                         InputStream in = response.getEntity().getContent();
                         element.setAsSent();
+                        AdminSettings.getInstance().setLastUpdateTime(new Date().toString());
                     } else {
                         Log.e(TAG, "Received BAD HTTP status code " + response.getStatusLine().getStatusCode()
                                 + " for " + element.toJSON());
