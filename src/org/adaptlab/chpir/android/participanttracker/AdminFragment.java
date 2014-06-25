@@ -1,7 +1,6 @@
 package org.adaptlab.chpir.android.participanttracker;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
-import org.adaptlab.chpir.android.activerecordcloudsync.PollService;
 import org.adaptlab.chpir.android.participanttracker.models.AdminSettings;
 
 import android.os.Bundle;
@@ -61,7 +60,7 @@ public class AdminFragment extends Fragment {
 	}
 	
 	public String getLastUpdateTime() {
-		return (PollService.getLastUpdate()) + "";
+		return AdminSettings.getInstance().getLastUpdateTime();
 	}
 	
 	public String getAdminSettingsInstanceApiUrl() {
