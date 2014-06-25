@@ -15,24 +15,11 @@ import android.util.Log;
 public class HttpFetchr {
     private static final String TAG = "HttpFetchr";
     Class <? extends ReceiveModel> mReceiveTableClass;
-    //Class <? extends SendReceiveModel> mSendReceiveTableClass;
     private String mRemoteTableName;
     
     public HttpFetchr() {
     	super();
     }
-    
-//    public void setRemoteTableName(String table) {
-//    	mRemoteTableName = table;
-//    }
-//    
-//    public void setReceiveTableClass(Class<? extends ReceiveModel> className) {
-//    	mReceiveTableClass = className;
-//    }
-//    
-//    public void setSendReceiveTableClass(Class<? extends SendReceiveModel> className) {
-//    	mSendReceiveTableClass = className;
-//    }
     
     public HttpFetchr(String remoteTableName, Class<? extends ReceiveModel> receiveTableClass) {
         mReceiveTableClass = receiveTableClass;

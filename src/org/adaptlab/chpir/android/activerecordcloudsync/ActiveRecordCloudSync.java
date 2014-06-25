@@ -95,6 +95,11 @@ public class ActiveRecordCloudSync {
     	httpLogin.login(json);
     }
     
+    public static void logoutUser() {
+    	HttpLogin httpLogin = new HttpLogin();
+    	httpLogin.logout();
+    }
+    
     public static boolean isApiAvailable() {
         if (getPingAddress() == null) return true;
         int responseCode = ping(getPingAddress(), 10000);
