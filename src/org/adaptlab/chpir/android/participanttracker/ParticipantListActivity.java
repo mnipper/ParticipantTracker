@@ -241,6 +241,7 @@ public class ParticipantListActivity extends FragmentActivity implements
             public boolean onQueryTextChange(String newText) {
                 if (TextUtils.isEmpty(newText)) {              
                     currentQuery = null;
+                    setParticipantListAdapter(currentQuery);
                 } else {
                     currentQuery = newText;
                 }
