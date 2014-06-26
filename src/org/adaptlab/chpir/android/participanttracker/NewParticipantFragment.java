@@ -153,11 +153,11 @@ public class NewParticipantFragment extends Fragment {
         mParticipantPropertiesContainer.addView(textView);
         textView.setText(relationshipType.getLabel());
         
-        Button button = new Button(getActivity());
+        final Button button = new Button(getActivity());
         button.setText("Select " + relationshipType.getRelatedParticipantType().getLabel());
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                displayRelationshipPicker(relationshipType);
+                displayRelationshipPicker(relationshipType, button);
             }
         });
         mParticipantPropertiesContainer.addView(button);
@@ -187,7 +187,7 @@ public class NewParticipantFragment extends Fragment {
         getActivity().finish();
     }
     
-    public void displayRelationshipPicker(final RelationshipType relationshipType) {
+    public void displayRelationshipPicker(final RelationshipType relationshipType, final Button button) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Choose " + relationshipType.getRelatedParticipantType().getLabel());
         final List<Participant> relationshipParticipants = Participant.getAllByParticipantType(relationshipType.getRelatedParticipantType());
@@ -199,6 +199,7 @@ public class NewParticipantFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mRelationshipFields.put(relationshipType, relationshipParticipants.get(which));
+                button.setText(relationshipParticipants.get(which).getLabel());
                 dialog.cancel();
             }
         });
