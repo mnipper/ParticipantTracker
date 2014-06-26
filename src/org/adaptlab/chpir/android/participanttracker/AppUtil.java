@@ -47,8 +47,10 @@ public class AppUtil {
 	private static void addDataTables() {
 		ActiveRecordCloudSync.addReceiveTable("participant_types", ParticipantType.class);
 		ActiveRecordCloudSync.addReceiveTable("properties", Property.class);
+		ActiveRecordCloudSync.addReceiveTable("relationship_types", RelationshipType.class);
 		ActiveRecordCloudSync.addSendReceiveTable("participants", Participant.class);
 		ActiveRecordCloudSync.addSendReceiveTable("participant_properties", ParticipantProperty.class);
+		ActiveRecordCloudSync.addSendReceiveTable("relationships", Relationship.class);
 	}
 
 	public static void seedDb() {
