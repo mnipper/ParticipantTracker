@@ -61,6 +61,10 @@ public class ParticipantType extends ReceiveModel {
         return new Select().from(ParticipantType.class).where("RemoteId = ?", id).executeSingle();
     }
     
+    public List<RelationshipType> getRelationshipTypes() {
+        return new Select().from(RelationshipType.class).where("OwnerParticipantType = ?", getId()).execute();        
+    }
+    
     public static int getCount() {
        return getAll().size();
     }

@@ -8,6 +8,7 @@ import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
 import org.adaptlab.chpir.android.participanttracker.models.Property;
+import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -84,13 +85,23 @@ public class AppUtil {
 					participant.save();
 
 					ParticipantProperty participantProperty = new ParticipantProperty(
-							participant, nameProperty, participantType + " "
-									+ i);
+							participant, nameProperty, participantType + " " + i
+					);
 					participantProperty.save();
 
 					participantProperty = new ParticipantProperty(participant,
 							ageProperty, String.valueOf(i));
 					participantProperty.save();
+				}
+				
+				if (participantType.getLabel().equals("Child")) {
+				    Log.i(TAG, "Creating relationship");
+				    RelationshipType relationshipType = new RelationshipType(
+				            "Caregiver",
+				            ParticipantType.findById(new Long(1)),
+				            ParticipantType.findById(new Long(2))
+				    );
+				    relationshipType.save();
 				}
 			}
 		}

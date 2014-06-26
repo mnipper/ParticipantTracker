@@ -3,6 +3,7 @@ package org.adaptlab.chpir.android.participanttracker;
 import org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver;
 import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
+import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
 import org.json.JSONException;
 
 import android.app.Activity;
@@ -69,13 +70,17 @@ public class ParticipantDetailFragment extends Fragment {
                 false);       
         
         mParticipantPropertiesContainer = (LinearLayout) v.findViewById(R.id.participant_properties_container);
-        
+
         for (ParticipantProperty participantProperty : mParticipant.getParticipantProperties()) {
             addKeyValueLabel(participantProperty.getProperty().getLabel(), participantProperty.getValue());
         }
         
         addKeyValueLabel("UUID", mParticipant.getUUID());
-        
+             
+        for (RelationshipType relationshipType : mParticipant.getParticipantType().getRelationshipTypes()) {
+            addSelectRelationshipButton(relationshipType);
+        }
+                
         return v;
     }
     
@@ -136,5 +141,20 @@ public class ParticipantDetailFragment extends Fragment {
         spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
         textView.setText(spanString);
         mParticipantPropertiesContainer.addView(textView);
+    }
+    
+    private void addSelectRelationshipButton(RelationshipType relationshipType) {
+        TextView textView = new TextView(getActivity());
+        textView.setTextAppearance(getActivity(), R.style.sectionHeader);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 25, 0, 0);
+        textView.setLayoutParams(layoutParams);
+        mParticipantPropertiesContainer.addView(textView);
+        textView.setText(relationshipType.getLabel());
+        
+        Button button = new Button(getActivity());
+        button.setText("Select " + relationshipType.getRelatedParticipantType().getLabel());        
+        mParticipantPropertiesContainer.addView(button);
     }
 }

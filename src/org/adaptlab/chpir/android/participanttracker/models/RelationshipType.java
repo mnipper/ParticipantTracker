@@ -27,6 +27,13 @@ public class RelationshipType extends ReceiveModel {
         super();
     }
     
+    public RelationshipType(String label, ParticipantType owner, ParticipantType related) {
+        super();
+        setLabel(label);
+        setOwnerParticipantType(owner);
+        setRelatedParticipantType(related);
+    }
+    
     @Override
     public void createObjectFromJSON(JSONObject jsonObject) {
         try {
