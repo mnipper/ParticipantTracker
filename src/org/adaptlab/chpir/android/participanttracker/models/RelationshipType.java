@@ -91,5 +91,4 @@ public class RelationshipType extends ReceiveModel {
     private void setRelatedParticipantType(ParticipantType relatedParticipantType) {
         mRelatedParticipantType = relatedParticipantType;
     }
-
 }

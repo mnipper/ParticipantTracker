@@ -72,21 +72,19 @@ public class HttpLogin {
             se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             HttpPost post = new HttpPost(ActiveRecordCloudSync.getEndPoint() + mSessions);
             post.setEntity(se);
-            Log.i(TAG, "Sending post request: " + user.toString());
+            Log.i(TAG, "Sending post request for user");
             response = client.execute(post);
             
             if (response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300) {
-                Log.i(TAG, "Received OK HTTP status for " + user);
+                Log.i(TAG, "Received OK HTTP status for user");
                 String in = inputStreamToString(response.getEntity().getContent()).toString();
-                Log.i(TAG, "Received: " + in);
                 JSONObject json = new JSONObject(in);
                 JSONObject data = json.getJSONObject("data");
                 String authToken = data.getString("auth_token");
-                Log.i(TAG, "Auth Token: " + authToken);
                 ActiveRecordCloudSync.setAuthToken(authToken);
                 
             } else {
-                Log.e(TAG, "Received BAD HTTP status code " + response.getStatusLine().getStatusCode() + " for " + user);
+                Log.e(TAG, "Received BAD HTTP status code " + response.getStatusLine().getStatusCode() + " for user");
             }
            
         } catch(Exception e) {

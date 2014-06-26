@@ -72,7 +72,6 @@ public class LoginFragment extends Fragment {
 	}
 	
 	private class RemoteAuthenticationTask extends AsyncTask<Void, Void, Void> {
-		private static final String TAG = "RemoteAuthenticationTask";
 
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -84,7 +83,6 @@ public class LoginFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(Void param) {
-			Log.i(TAG, "authenticated user and token is: " + ActiveRecordCloudSync.getAuthToken());
 			if (ActiveRecordCloudSync.getAuthToken() != null) {
 				new SyncTablesTask().execute();
 			} else {
