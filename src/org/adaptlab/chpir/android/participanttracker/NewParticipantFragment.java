@@ -1,19 +1,22 @@
 package org.adaptlab.chpir.android.participanttracker;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
 import org.adaptlab.chpir.android.participanttracker.models.Property;
+import org.adaptlab.chpir.android.participanttracker.models.Relationship;
 import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +35,7 @@ public class NewParticipantFragment extends Fragment {
     
     private ParticipantType mParticipantType;
     private HashMap<Property, EditText> mPropertyFields;
+    private HashMap<RelationshipType, Participant> mRelationshipFields;
     
     private LinearLayout mParticipantPropertiesContainer;
     
@@ -47,9 +51,9 @@ public class NewParticipantFragment extends Fragment {
 
             mParticipantType = ParticipantType.findById(participantTypeId);
             mPropertyFields = new HashMap<Property, EditText>();
+            mRelationshipFields = new HashMap<RelationshipType, Participant>();
         }
-        
-        
+               
         getActivity().setTitle(getString(R.string.new_participant_prefix) + mParticipantType.getLabel());
     }
         
@@ -138,7 +142,7 @@ public class NewParticipantFragment extends Fragment {
         mParticipantPropertiesContainer.addView(editText);
     }
        
-    private void attachSelectRelationshipButton(RelationshipType relationshipType) {
+    private void attachSelectRelationshipButton(final RelationshipType relationshipType) {
         TextView textView = new TextView(getActivity());
         textView.setTextAppearance(getActivity(), R.style.sectionHeader);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -149,7 +153,12 @@ public class NewParticipantFragment extends Fragment {
         textView.setText(relationshipType.getLabel());
         
         Button button = new Button(getActivity());
-        button.setText("Select " + relationshipType.getRelatedParticipantType().getLabel());        
+        button.setText("Select " + relationshipType.getRelatedParticipantType().getLabel());
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                displayRelationshipPicker(relationshipType);
+            }
+        });
         mParticipantPropertiesContainer.addView(button);
     }
     
@@ -166,7 +175,34 @@ public class NewParticipantFragment extends Fragment {
             participantProperty.save();
         }
         
+        for (RelationshipType relationshipType : mRelationshipFields.keySet()) {
+            Relationship relationship = new Relationship();
+            relationship.setParticipantOwner(participant);
+            relationship.setParticipantRelated(mRelationshipFields.get(relationshipType));
+            relationship.save();
+            attachSelectRelationshipButton(relationshipType);
+        }
+        
         getActivity().setResult(Activity.RESULT_OK);
         getActivity().finish();
+    }
+    
+    public void displayRelationshipPicker(final RelationshipType relationshipType) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Choose " + relationshipType.getRelatedParticipantType().getLabel());
+        final List<Participant> relationshipParticipants = Participant.getAllByParticipantType(relationshipType.getRelatedParticipantType());
+        CharSequence[] relationshipParticipantLabels = new CharSequence[relationshipParticipants.size()];
+        for (int i = 0; i < relationshipParticipants.size(); i++) {
+            relationshipParticipantLabels[i] = relationshipParticipants.get(i).getLabel();
+        }
+        builder.setSingleChoiceItems(relationshipParticipantLabels, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mRelationshipFields.put(relationshipType, relationshipParticipants.get(which));
+                dialog.cancel();
+            }
+        });
+        
+        builder.show();
     }
 }
