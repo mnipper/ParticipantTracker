@@ -191,6 +191,9 @@ public class Participant extends SendReceiveModel {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("participant_uuid", getUUID());
         jsonObject.put("participant_type", getParticipantType().getLabel());
+        for (Relationship relationship : getRelationships()) {
+            jsonObject.put(relationship.getRelationshipType().getLabel(), relationship.getParticipantRelated().getUUID());
+        }
         return jsonObject.toString();
 	}
 }
