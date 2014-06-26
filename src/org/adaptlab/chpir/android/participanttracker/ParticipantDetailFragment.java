@@ -76,10 +76,6 @@ public class ParticipantDetailFragment extends Fragment {
         }
         
         addKeyValueLabel("UUID", mParticipant.getUUID());
-             
-        for (RelationshipType relationshipType : mParticipant.getParticipantType().getRelationshipTypes()) {
-            addSelectRelationshipButton(relationshipType);
-        }
                 
         return v;
     }
@@ -142,19 +138,5 @@ public class ParticipantDetailFragment extends Fragment {
         textView.setText(spanString);
         mParticipantPropertiesContainer.addView(textView);
     }
-    
-    private void addSelectRelationshipButton(RelationshipType relationshipType) {
-        TextView textView = new TextView(getActivity());
-        textView.setTextAppearance(getActivity(), R.style.sectionHeader);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 25, 0, 0);
-        textView.setLayoutParams(layoutParams);
-        mParticipantPropertiesContainer.addView(textView);
-        textView.setText(relationshipType.getLabel());
-        
-        Button button = new Button(getActivity());
-        button.setText("Select " + relationshipType.getRelatedParticipantType().getLabel());        
-        mParticipantPropertiesContainer.addView(button);
-    }
+
 }

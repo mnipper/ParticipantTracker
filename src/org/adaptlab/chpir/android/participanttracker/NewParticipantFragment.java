@@ -6,6 +6,7 @@ import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
 import org.adaptlab.chpir.android.participanttracker.models.Property;
+import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -66,6 +67,10 @@ public class NewParticipantFragment extends Fragment {
             attachLabelForProperty(property);
             attachFieldForProperty(property);
             attachRequiredLabel(property);
+        }
+                
+        for (RelationshipType relationshipType : mParticipantType.getRelationshipTypes()) {
+            attachSelectRelationshipButton(relationshipType);
         }
         
         return v;
@@ -131,6 +136,21 @@ public class NewParticipantFragment extends Fragment {
 
         mPropertyFields.put(property, editText);
         mParticipantPropertiesContainer.addView(editText);
+    }
+       
+    private void attachSelectRelationshipButton(RelationshipType relationshipType) {
+        TextView textView = new TextView(getActivity());
+        textView.setTextAppearance(getActivity(), R.style.sectionHeader);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 50, 0, 0);
+        textView.setLayoutParams(layoutParams);
+        mParticipantPropertiesContainer.addView(textView);
+        textView.setText(relationshipType.getLabel());
+        
+        Button button = new Button(getActivity());
+        button.setText("Select " + relationshipType.getRelatedParticipantType().getLabel());        
+        mParticipantPropertiesContainer.addView(button);
     }
     
     private void saveParticipant() {

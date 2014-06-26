@@ -79,6 +79,16 @@ public class AppUtil {
 				nameProperty.save();
 				ageProperty.save();
 				dateProperty.save();
+                
+                if (participantType.getLabel().equals("Child")) {
+                    Log.i(TAG, "Creating relationship");
+                    RelationshipType relationshipType = new RelationshipType(
+                            "Caregiver",
+                            ParticipantType.findById(new Long(1)),
+                            ParticipantType.findById(new Long(2))
+                    );
+                    relationshipType.save();
+                }
 
 				for (int i = 0; i < 10; i++) {
 					Participant participant = new Participant(participantType);
@@ -92,16 +102,6 @@ public class AppUtil {
 					participantProperty = new ParticipantProperty(participant,
 							ageProperty, String.valueOf(i));
 					participantProperty.save();
-				}
-				
-				if (participantType.getLabel().equals("Child")) {
-				    Log.i(TAG, "Creating relationship");
-				    RelationshipType relationshipType = new RelationshipType(
-				            "Caregiver",
-				            ParticipantType.findById(new Long(1)),
-				            ParticipantType.findById(new Long(2))
-				    );
-				    relationshipType.save();
 				}
 			}
 		}
