@@ -192,14 +192,26 @@ public class NewParticipantFragment extends Fragment {
         builder.setTitle("Choose " + relationshipType.getRelatedParticipantType().getLabel());
         final List<Participant> relationshipParticipants = Participant.getAllByParticipantType(relationshipType.getRelatedParticipantType());
         CharSequence[] relationshipParticipantLabels = new CharSequence[relationshipParticipants.size()];
+
         for (int i = 0; i < relationshipParticipants.size(); i++) {
             relationshipParticipantLabels[i] = relationshipParticipants.get(i).getLabel();
         }
-        builder.setSingleChoiceItems(relationshipParticipantLabels, -1, new DialogInterface.OnClickListener() {
+        
+        builder.setSingleChoiceItems(relationshipParticipantLabels, -1, null);            
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mRelationshipFields.put(relationshipType, relationshipParticipants.get(which));
-                button.setText(relationshipParticipants.get(which).getLabel());
+                dialog.cancel();
+                int selectedPosition = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
+                if (selectedPosition == -1) return;
+                mRelationshipFields.put(relationshipType, relationshipParticipants.get(selectedPosition));
+                button.setText(relationshipParticipants.get(selectedPosition).getLabel());
+            }
+        });
+        
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
