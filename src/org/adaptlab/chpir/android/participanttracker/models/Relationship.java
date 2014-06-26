@@ -10,8 +10,10 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
+@Table(name = "Relationship")
 public class Relationship extends SendReceiveModel {
     private static final String TAG = "Relationship";
     
