@@ -51,6 +51,7 @@ public class Relationship extends SendReceiveModel {
             if (getParticipantRelated() != null)
                 jsonObject.put("participant_related_uuid", getParticipantRelated().getUUID());
             jsonObject.put("relationship_type_id", getRelationshipType().getRemoteId());
+            jsonObject.put("uuid", getUUID());
 
             json.put("relationship", jsonObject);
         } catch (JSONException je) {
