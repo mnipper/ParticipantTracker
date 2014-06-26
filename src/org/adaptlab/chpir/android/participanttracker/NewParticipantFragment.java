@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -176,11 +177,10 @@ public class NewParticipantFragment extends Fragment {
         }
         
         for (RelationshipType relationshipType : mRelationshipFields.keySet()) {
-            Relationship relationship = new Relationship();
+            Relationship relationship = new Relationship(relationshipType);
             relationship.setParticipantOwner(participant);
             relationship.setParticipantRelated(mRelationshipFields.get(relationshipType));
             relationship.save();
-            attachSelectRelationshipButton(relationshipType);
         }
         
         getActivity().setResult(Activity.RESULT_OK);

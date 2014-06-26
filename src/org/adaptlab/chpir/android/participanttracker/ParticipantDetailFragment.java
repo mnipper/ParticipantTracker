@@ -3,7 +3,7 @@ package org.adaptlab.chpir.android.participanttracker;
 import org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver;
 import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
-import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
+import org.adaptlab.chpir.android.participanttracker.models.Relationship;
 import org.json.JSONException;
 
 import android.app.Activity;
@@ -74,9 +74,13 @@ public class ParticipantDetailFragment extends Fragment {
         for (ParticipantProperty participantProperty : mParticipant.getParticipantProperties()) {
             addKeyValueLabel(participantProperty.getProperty().getLabel(), participantProperty.getValue());
         }
+
+        for (Relationship relationship : mParticipant.getRelationships()) {
+            addKeyValueLabel(relationship.getRelationshipType().getLabel(), relationship.getParticipantRelated().getLabel());
+        }
         
         addKeyValueLabel("UUID", mParticipant.getUUID());
-                
+          
         return v;
     }
     

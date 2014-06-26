@@ -8,6 +8,7 @@ import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
 import org.adaptlab.chpir.android.participanttracker.models.Property;
+import org.adaptlab.chpir.android.participanttracker.models.Relationship;
 import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -41,7 +42,6 @@ public class AppUtil {
 		ActiveRecordCloudSync.setEndPoint(AdminSettings.getInstance().getApiUrl());
 		addDataTables();
 		seedDb();
-
 	}
 
 	private static void addDataTables() {

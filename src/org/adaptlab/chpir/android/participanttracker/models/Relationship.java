@@ -1,5 +1,6 @@
 package org.adaptlab.chpir.android.participanttracker.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.SendReceiveModel;
@@ -24,10 +25,17 @@ public class Relationship extends SendReceiveModel {
     private Participant mParticipantRelated;
     @Column(name = "UUID")
     private String mUUID;
+    @Column(name = "RelationshipType")
+    private RelationshipType mRelationshipType;
     
     public Relationship() {
         super();
+    }
+    
+    public Relationship(RelationshipType relationshipType) {
+        super();
         mUUID = UUID.randomUUID().toString();
+        mRelationshipType = relationshipType;
     }
 
     @Override
@@ -40,6 +48,7 @@ public class Relationship extends SendReceiveModel {
                 jsonObject.put("participant_owner_uuid", getParticipantOwner().getUUID());
             if (getParticipantRelated() != null)
                 jsonObject.put("participant_related_uuid", getParticipantRelated().getUUID());
+            jsonObject.put("relationship_type_id", getRelationshipType().getRemoteId());
 
             json.put("relationship", jsonObject);
         } catch (JSONException je) {
@@ -68,6 +77,8 @@ public class Relationship extends SendReceiveModel {
             if (participantRelated != null) {
                 relationship.setParticipantRelated(participantRelated);
             }
+            
+            relationship.setRelationshipType(RelationshipType.findByRemoteId(jsonObject.getLong("relationship_type_id")));
 
             if (jsonObject.isNull("deleted_at")) {
                 relationship.save();
@@ -89,6 +100,10 @@ public class Relationship extends SendReceiveModel {
     
     public static Relationship findByUUID(String uuid) {
         return new Select().from(Relationship.class).where("UUID = ?", uuid).executeSingle();
+    }
+    
+    public static List<Relationship> getAll() {
+        return new Select().from(Relationship.class).orderBy("Id ASC").execute();
     }
 
     @Override
@@ -137,5 +152,13 @@ public class Relationship extends SendReceiveModel {
 
     private void setUUID(String uUID) {
         mUUID = uUID;
+    }
+
+    public RelationshipType getRelationshipType() {
+        return mRelationshipType;
+    }
+
+    public void setRelationshipType(RelationshipType relationshipType) {
+        mRelationshipType = relationshipType;
     }
 }

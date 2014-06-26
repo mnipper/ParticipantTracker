@@ -113,6 +113,10 @@ public class Participant extends SendReceiveModel {
     public List<ParticipantProperty> getParticipantProperties() {
         return new Select().from(ParticipantProperty.class).where("Participant = ?", getId()).execute();
     }
+    
+    public List<Relationship> getRelationships() {
+        return new Select().from(Relationship.class).where("ParticpantOwner = ?", getId()).execute();
+    }
 
     @Override
     public boolean isSent() {
