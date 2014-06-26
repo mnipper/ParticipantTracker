@@ -75,8 +75,26 @@ public class ParticipantDetailFragment extends Fragment {
             addKeyValueLabel(participantProperty.getProperty().getLabel(), participantProperty.getValue());
         }
 
-        for (Relationship relationship : mParticipant.getRelationships()) {
-            addKeyValueLabel(relationship.getRelationshipType().getLabel(), relationship.getParticipantRelated().getLabel());
+        for (final Relationship relationship : mParticipant.getRelationships()) {
+            TextView textView = new TextView(getActivity());
+            textView.setTextAppearance(getActivity(), R.style.sectionHeader);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 25, 0, 0);
+            textView.setLayoutParams(layoutParams);
+            mParticipantPropertiesContainer.addView(textView);
+            textView.setText(relationship.getRelationshipType().getLabel());
+            
+            Button button = new Button(getActivity());
+            button.setText(relationship.getParticipantRelated().getLabel());
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), ParticipantDetailActivity.class);
+                    i.putExtra(ParticipantDetailFragment.EXTRA_PARTICIPANT_ID, relationship.getParticipantRelated().getId());
+                    startActivity(i);
+                }
+            });
+            mParticipantPropertiesContainer.addView(button);
         }
         
         addKeyValueLabel("UUID", mParticipant.getUUID());
