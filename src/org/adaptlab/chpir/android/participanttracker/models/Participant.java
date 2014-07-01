@@ -170,7 +170,7 @@ public class Participant extends SendReceiveModel {
     }
     
     public List<Relationship> getRelationships() {
-        return new Select().from(Relationship.class).where("ParticpantOwner = ?", getId()).execute();
+        return new Select().from(Relationship.class).where("ParticpantOwner = ?", getId()).orderBy("RelationshipType ASC").execute();
     }
 
     @Override
