@@ -42,12 +42,14 @@ public class ParticipantDetailFragment extends Fragment {
     private LinearLayout mParticipantPropertiesContainer;
     private static Activity sActivity;
     private Map<ParticipantProperty, TextView> mParticipantPropertyLabels;
+    private Map<Relationship, Button> mRelationshipButtons;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sActivity = getActivity();
         mParticipantPropertyLabels = new HashMap<ParticipantProperty, TextView>();
+        mRelationshipButtons = new HashMap<Relationship, Button>();
         
         if (savedInstanceState != null) {
             mParticipant = Participant.findById(savedInstanceState.getLong(EXTRA_PARTICIPANT_ID));
@@ -96,6 +98,7 @@ public class ParticipantDetailFragment extends Fragment {
                 }
             });
             mParticipantPropertiesContainer.addView(button);
+            mRelationshipButtons.put(relationship, button);
         }
         
         addKeyValueLabel("UUID", mParticipant.getUUID());
@@ -135,6 +138,10 @@ public class ParticipantDetailFragment extends Fragment {
                     mParticipantPropertyLabels.get(participantProperty).setText(
                             styleValueLabel(participantProperty.getValue())
                     );
+                }
+                
+                for (Relationship relationship : mParticipant.getRelationships()) {
+                    mRelationshipButtons.get(relationship).setText(relationship.getParticipantRelated().getLabel());
                 }
             }
         }
