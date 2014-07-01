@@ -1,5 +1,8 @@
 package org.adaptlab.chpir.android.participanttracker;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver;
 import org.adaptlab.chpir.android.participanttracker.models.Participant;
 import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
@@ -32,17 +35,19 @@ public class ParticipantDetailFragment extends Fragment {
             "org.adaptlab.chpir.participanttracker.participantdetailfragment.participant_id";
     public final static String EXTRA_PARTICIPANT_METADATA =
             "org.adaptlab.chpir.android.survey.metadata";
+    private final static int UPDATE_PARTICIPANT = 0;
     
     private Participant mParticipant;
     private static String sParticipantMetadata;
     private LinearLayout mParticipantPropertiesContainer;
-    private Button mNewSurveyButton;
     private static Activity sActivity;
+    private Map<ParticipantProperty, TextView> mParticipantPropertyLabels;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sActivity = getActivity();
+        mParticipantPropertyLabels = new HashMap<ParticipantProperty, TextView>();
         
         if (savedInstanceState != null) {
             mParticipant = Participant.findById(savedInstanceState.getLong(EXTRA_PARTICIPANT_ID));
@@ -72,18 +77,14 @@ public class ParticipantDetailFragment extends Fragment {
         mParticipantPropertiesContainer = (LinearLayout) v.findViewById(R.id.participant_properties_container);
 
         for (ParticipantProperty participantProperty : mParticipant.getParticipantProperties()) {
-            addKeyValueLabel(participantProperty.getProperty().getLabel(), participantProperty.getValue());
+            mParticipantPropertyLabels.put(
+                    participantProperty,
+                    addKeyValueLabel(participantProperty.getProperty().getLabel(), participantProperty.getValue())
+            );
         }
 
         for (final Relationship relationship : mParticipant.getRelationships()) {
-            TextView textView = new TextView(getActivity());
-            textView.setTextAppearance(getActivity(), R.style.sectionHeader);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 25, 0, 0);
-            textView.setLayoutParams(layoutParams);
-            mParticipantPropertiesContainer.addView(textView);
-            textView.setText(relationship.getRelationshipType().getLabel());
+            addHeader(relationship.getRelationshipType().getLabel());
             
             Button button = new Button(getActivity());
             button.setText(relationship.getParticipantRelated().getLabel());
@@ -114,8 +115,28 @@ public class ParticipantDetailFragment extends Fragment {
             case R.id.action_new:
                 newSurvey();
                 return true;
+            case R.id.action_edit_participant:
+                Intent i = new Intent(getActivity(), NewParticipantActivity.class);
+                i.putExtra(NewParticipantFragment.EXTRA_PARTICIPANT_ID, mParticipant.getId());
+                i.putExtra(NewParticipantFragment.EXTRA_PARTICIPANT_TYPE_ID, mParticipant.getParticipantType().getId());
+                startActivityForResult(i, UPDATE_PARTICIPANT);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == UPDATE_PARTICIPANT) {
+            if (resultCode == Activity.RESULT_OK) {
+                for (ParticipantProperty participantProperty : mParticipant.getParticipantProperties()) {
+                    mParticipantPropertyLabels.get(participantProperty).setText(
+                            styleValueLabel(participantProperty.getValue())
+                    );
+                }
+            }
         }
     }
     
@@ -144,7 +165,25 @@ public class ParticipantDetailFragment extends Fragment {
         getActivity().getApplicationContext().sendBroadcast(i);
     }
     
-    private void addKeyValueLabel(String key, String value) {
+    /*
+     * Return the text view for the value so that it may be updated later.
+     */
+    private TextView addKeyValueLabel(String key, String value) {
+        addHeader(key);
+        
+        TextView textView = new TextView(getActivity());
+        textView.setText(styleValueLabel(value));
+        mParticipantPropertiesContainer.addView(textView);
+        return textView;
+    }
+    
+    private SpannableString styleValueLabel(String value) {
+        SpannableString spanString = new SpannableString(value);
+        spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+        return spanString;
+    }
+    
+    private void addHeader(String label) {
         TextView textView = new TextView(getActivity());
         textView.setTextAppearance(getActivity(), R.style.sectionHeader);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -152,13 +191,6 @@ public class ParticipantDetailFragment extends Fragment {
         layoutParams.setMargins(0, 25, 0, 0);
         textView.setLayoutParams(layoutParams);
         mParticipantPropertiesContainer.addView(textView);
-        textView.setText(key);
-        
-        textView = new TextView(getActivity());
-        SpannableString spanString = new SpannableString(value);
-        spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-        textView.setText(spanString);
-        mParticipantPropertiesContainer.addView(textView);
+        textView.setText(label);                
     }
-
 }

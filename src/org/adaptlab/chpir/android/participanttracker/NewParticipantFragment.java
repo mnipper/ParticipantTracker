@@ -33,8 +33,11 @@ public class NewParticipantFragment extends Fragment {
     private static final String TAG = "NewParticipantFragment";
     public final static String EXTRA_PARTICIPANT_TYPE_ID = 
             "org.adaptlab.chpir.participanttracker.newparticipantfragment.participant_type_id";
+    public final static String EXTRA_PARTICIPANT_ID = 
+            "org.adaptlab.chpir.participanttracker.newparticipantfragment.participant_id";
     
     private ParticipantType mParticipantType;
+    private Participant mParticipant;
     private HashMap<Property, EditText> mPropertyFields;
     private HashMap<RelationshipType, Participant> mRelationshipFields;
     
@@ -54,8 +57,8 @@ public class NewParticipantFragment extends Fragment {
             mPropertyFields = new HashMap<Property, EditText>();
             mRelationshipFields = new HashMap<RelationshipType, Participant>();
         }
-               
-        getActivity().setTitle(getString(R.string.new_participant_prefix) + mParticipantType.getLabel());
+        
+        loadOrCreateParticipant();
     }
         
     @Override
@@ -138,6 +141,10 @@ public class NewParticipantFragment extends Fragment {
         } else if (property.getTypeOf() == Property.PropertyType.DATE) {
             editText.setInputType(InputType.TYPE_CLASS_DATETIME | InputType.TYPE_DATETIME_VARIATION_DATE);
         }
+        
+        if (mParticipant.hasParticipantProperty(property)) {
+            editText.setText(mParticipant.getParticipantProperty(property).getValue());
+        }
 
         mPropertyFields.put(property, editText);
         mParticipantPropertiesContainer.addView(editText);
@@ -154,7 +161,15 @@ public class NewParticipantFragment extends Fragment {
         textView.setText(relationshipType.getLabel());
         
         final Button button = new Button(getActivity());
-        button.setText("Select " + relationshipType.getRelatedParticipantType().getLabel());
+        
+        if (mParticipant.hasRelationshipByRelationshipType(relationshipType)) {
+            Participant relatedParticipant = mParticipant.getRelationshipByRelationshipType(relationshipType).getParticipantRelated();
+            button.setText(relatedParticipant.getLabel());
+            mRelationshipFields.put(relationshipType, relatedParticipant);
+        } else {
+            button.setText("Select " + relationshipType.getRelatedParticipantType().getLabel());
+        }
+        
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 displayRelationshipPicker(relationshipType, button);
@@ -168,17 +183,17 @@ public class NewParticipantFragment extends Fragment {
             return;
         }
         
-        Participant participant = new Participant(mParticipantType);
-        participant.save();
+        mParticipant.save();
         
         for (Property property : mParticipantType.getProperties()) {
-            ParticipantProperty participantProperty = new ParticipantProperty(participant, property, mPropertyFields.get(property).getText().toString());
+            ParticipantProperty participantProperty = mParticipant.getParticipantProperty(property);
+            participantProperty.setValue(mPropertyFields.get(property).getText().toString());
             participantProperty.save();
         }
         
         for (RelationshipType relationshipType : mRelationshipFields.keySet()) {
-            Relationship relationship = new Relationship(relationshipType);
-            relationship.setParticipantOwner(participant);
+            Relationship relationship = mParticipant.getRelationshipByRelationshipType(relationshipType);
+            relationship.setParticipantOwner(mParticipant);
             relationship.setParticipantRelated(mRelationshipFields.get(relationshipType));
             relationship.save();
         }
@@ -217,5 +232,16 @@ public class NewParticipantFragment extends Fragment {
         });
         
         builder.show();
+    }
+    
+    private void loadOrCreateParticipant() {
+        Long participantId = getActivity().getIntent().getLongExtra(EXTRA_PARTICIPANT_ID, -1);
+        if (participantId == -1) {
+            mParticipant = new Participant(mParticipantType);
+            getActivity().setTitle(getString(R.string.new_participant_prefix) + mParticipantType.getLabel());
+        } else {
+            mParticipant = Participant.findById(participantId);
+            getActivity().setTitle(mParticipant.getLabel());
+        }
     }
 }

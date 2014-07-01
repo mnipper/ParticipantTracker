@@ -28,6 +28,8 @@ public class Participant extends SendReceiveModel {
     
     public Participant() {
         super();
+        mUUID = UUID.randomUUID().toString();
+        mSent = false;
     }
     
     public Participant(ParticipantType participantType) {
@@ -88,6 +90,59 @@ public class Participant extends SendReceiveModel {
                         "%" + query + "%")
                 .orderBy("Participant.Id DESC")
                 .execute();
+    }
+    
+    public boolean hasParticipantProperty(Property property) {
+        for (ParticipantProperty participantProperty : getParticipantProperties()) {
+            if (participantProperty.getProperty().equals(property)) {
+                return true;
+            }
+        } 
+        
+        return false;
+    }
+    
+    /*
+     * If a participant property already exist for this type, return it.
+     * 
+     * If it does not exist, return a new participant property initialized
+     * with a null value.
+     * 
+     */
+    public ParticipantProperty getParticipantProperty(Property property) {
+        for (ParticipantProperty participantProperty : getParticipantProperties()) {
+            if (participantProperty.getProperty().equals(property)) {
+                return participantProperty;
+            }
+        } 
+        
+        return new ParticipantProperty(this, property, null);
+    }
+    
+    /*
+     * If a relationship already exist for this type, return it.
+     * 
+     * If it does not exist, return a new relationship.
+     * 
+     */
+    public Relationship getRelationshipByRelationshipType(RelationshipType relationshipType) {
+        for (Relationship relationship : getRelationships()) {
+            if (relationship.getRelationshipType().equals(relationshipType)) {
+                return relationship;
+            }
+        } 
+        
+        return new Relationship(relationshipType);
+    }
+    
+    public boolean hasRelationshipByRelationshipType(RelationshipType relationshipType) {
+        for (Relationship relationship : getRelationships()) {
+            if (relationship.getRelationshipType().equals(relationshipType)) {
+                return true;
+            }
+        } 
+        
+        return false;
     }
     
     public static int getCount() {

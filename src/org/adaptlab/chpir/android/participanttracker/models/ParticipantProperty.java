@@ -31,6 +31,8 @@ public class ParticipantProperty extends SendReceiveModel {
     
     public ParticipantProperty() {
         super();
+        mSent = false;
+        mUUID = UUID.randomUUID().toString();
     }
     
     public ParticipantProperty(Participant participant, Property property, String value) {
@@ -105,7 +107,7 @@ public class ParticipantProperty extends SendReceiveModel {
         return mValue;
     }
     
-    private void setValue(String value) {
+    public void setValue(String value) {
     	mValue = value;
     }
     
