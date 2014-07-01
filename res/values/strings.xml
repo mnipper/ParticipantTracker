@@ -34,4 +34,5 @@
     <string name="login_label_message">Please login in order to sync participants</string>
     <string name="email_password_mismatch">Invalid email and password combination!</string>
     <string name="invalid_email_or_password">Invalid email or password!</string>
+    <string name="edit">Edit</string>
 </resources>
