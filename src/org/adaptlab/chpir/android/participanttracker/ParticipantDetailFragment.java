@@ -147,6 +147,12 @@ public class ParticipantDetailFragment extends Fragment {
         }
     }
     
+    @Override
+    public void onResume() {
+        super.onResume();
+        sActivity = getActivity();
+    }
+    
     public static void displayInstrumentPicker(String[] instrumentTitleList, final long[] instrumentIdList) {
         AlertDialog.Builder builder = new AlertDialog.Builder(sActivity);
         builder.setTitle(sActivity.getString(R.string.choose_instrument));
