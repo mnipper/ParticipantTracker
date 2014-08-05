@@ -93,6 +93,8 @@ public class Participant extends SendReceiveModel {
     }
     
     public boolean hasParticipantProperty(Property property) {
+        if (getId() == null) return false;
+        
         for (ParticipantProperty participantProperty : getParticipantProperties()) {
             if (participantProperty.getProperty().equals(property)) {
                 return true;
@@ -136,6 +138,8 @@ public class Participant extends SendReceiveModel {
     }
     
     public boolean hasRelationshipByRelationshipType(RelationshipType relationshipType) {
+        if (getId() == null) return false;
+        
         for (Relationship relationship : getRelationships()) {
             if (relationship.getRelationshipType().equals(relationshipType)) {
                 return true;
