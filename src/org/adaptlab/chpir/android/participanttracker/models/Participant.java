@@ -16,6 +16,7 @@ import com.activeandroid.query.Select;
 @Table(name = "Participant")
 public class Participant extends SendReceiveModel {
     private static final String TAG = "Participant";
+    private static final String LABEL_DELIMITER = " ";
     
     @Column(name = "SentToRemote")
     private boolean mSent;
@@ -197,13 +198,19 @@ public class Participant extends SendReceiveModel {
     }
     
     public String getLabel() {
+        String label = "";
         for (ParticipantProperty participantProperty : getParticipantProperties()) {
             if (participantProperty.getProperty().getUseAsLabel()) {
-                return participantProperty.getValue();
+                if (!label.isEmpty()) label += LABEL_DELIMITER;
+                label += participantProperty.getValue();
             }
         } 
         
-        return mUUID;
+        if (label.isEmpty()) {
+            return mUUID; 
+        } else {
+            return label;
+        }
     }
 
 	@Override
