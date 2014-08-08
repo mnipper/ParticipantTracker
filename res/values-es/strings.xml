@@ -28,11 +28,11 @@
     <string name="last_update">Last update:  </string>
     <string name="system_information">System Information</string>
     <string name="version_code">Version Code: </string>
-    <string name="participants_loading_header">Loading Participants</string>
+    <string name="participants_loading_header">Carga de los participantes</string>
     <string name="participants_loading_message">Por favor espere un momento.</string>
-    <string name="login_button">Login</string>
-    <string name="login_label_message">Please login in order to sync participants</string>
-    <string name="email_password_mismatch">Invalid email and password combination!</string>
-    <string name="invalid_email_or_password">Invalid email or password!</string>
-    <string name="edit">Edit</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="login_label_message">Por favor, iniciar sesión con el fin de sincronizar los participantes</string>
+    <string name="email_password_mismatch">¡Correo electrónico y contraseña combinación no válida!</string>
+    <string name="invalid_email_or_password">Correo electrónico o contraseña no válida!</string>
+    <string name="edit">Editar</string>
 </resources>
