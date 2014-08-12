@@ -12,7 +12,7 @@ public class SerializableDatePicker extends DatePicker {
     }
 
     public String serialize() {
-        return this.getMonth() + "-" + this.getDayOfMonth() + "-" + this.getYear();
+        return (this.getMonth() + 1) + "-" + this.getDayOfMonth() + "-" + this.getYear();
     }
     
     public void deserialize(String serializedDate) {
@@ -20,7 +20,7 @@ public class SerializableDatePicker extends DatePicker {
         String[] dateComponents = serializedDate.split("-");
         int month, day, year;
         if (dateComponents.length == 3) {
-            month = Integer.parseInt(dateComponents[0]) - 1;
+            month = Integer.parseInt(dateComponents[0]);
             day = Integer.parseInt(dateComponents[1]);
             year = Integer.parseInt(dateComponents[2]);
             this.updateDate(year, month, day);
