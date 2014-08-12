@@ -16,7 +16,7 @@ public class SerializableDatePicker extends DatePicker {
     }
     
     public void deserialize(String serializedDate) {
-        if (serializedDate.equals("")) return;
+        if (serializedDate.equals("") || serializedDate == null) return;
         String[] dateComponents = serializedDate.split("-");
         int month, day, year;
         if (dateComponents.length == 3) {
