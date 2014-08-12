@@ -134,38 +134,29 @@ public class NewParticipantFragment extends Fragment {
         mParticipantPropertiesContainer.addView(textView);
     }
     
-    private void attachFieldForProperty(Property property) {                
-        if (property.getTypeOf() == Property.PropertyType.INTEGER) {
-            final EditText editText = new EditText(getActivity());
-            editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-            
-            if (mParticipant.hasParticipantProperty(property)) {
-                editText.setText(mParticipant.getParticipantProperty(property).getValue());
-            }
-
-            mPropertyFields.put(property, editText);
-            mParticipantPropertiesContainer.addView(editText);
-            
-        } else if (property.getTypeOf() == Property.PropertyType.DATE) {
-            final SerializableDatePicker datePicker = new SerializableDatePicker(getActivity());
-            datePicker.setCalendarViewShown(false);
-            
-            if (mParticipant.hasParticipantProperty(property)) {
-                datePicker.deserialize(mParticipant.getParticipantProperty(property).getValue());;
-            }
-            
-            mPropertyFields.put(property, datePicker);
-            mParticipantPropertiesContainer.addView(datePicker);            
-        } else {
-            final EditText editText = new EditText(getActivity());
-            
-            if (mParticipant.hasParticipantProperty(property)) {
-                editText.setText(mParticipant.getParticipantProperty(property).getValue());
-            }
-
-            mPropertyFields.put(property, editText);
-            mParticipantPropertiesContainer.addView(editText);            
+    private void attachFieldForProperty(Property property) {       
+        String propertyValue = "";        
+        if (mParticipant.hasParticipantProperty(property)) {
+            propertyValue = mParticipant.getParticipantProperty(property).getValue();
         }
+        
+        View propertyView = null;
+        
+        if (property.getTypeOf() == Property.PropertyType.INTEGER) {
+            propertyView = new EditText(getActivity());            
+            ((EditText) propertyView).setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+            ((EditText) propertyView).setText(propertyValue);         
+        } else if (property.getTypeOf() == Property.PropertyType.DATE) {
+            propertyView = new SerializableDatePicker(getActivity());           
+            ((SerializableDatePicker) propertyView).setCalendarViewShown(false);
+            ((SerializableDatePicker) propertyView).deserialize(propertyValue);           
+        } else {
+            propertyView = new EditText(getActivity());            
+            ((EditText) propertyView).setText(propertyValue);          
+        }
+                
+        mPropertyFields.put(property, propertyView);
+        mParticipantPropertiesContainer.addView(propertyView);   
     }
        
     private void attachSelectRelationshipButton(final RelationshipType relationshipType) {
