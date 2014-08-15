@@ -80,6 +80,11 @@ public class ParticipantDetailFragment extends Fragment {
         return v;
     }
     
+    /*
+     * Create the necessary mappings from participant relationships and properties
+     * to their corresponding UI elements.
+     * 
+     */
     public void refreshView() {
         mParticipantPropertyLabels = new HashMap<ParticipantProperty, TextView>();
         mRelationshipButtons = new HashMap<Relationship, Button>();
@@ -143,15 +148,6 @@ public class ParticipantDetailFragment extends Fragment {
                 
                 refreshView();
                 
-                for (ParticipantProperty participantProperty : mParticipant.getParticipantProperties()) {
-                    mParticipantPropertyLabels.get(participantProperty).setText(
-                            styleValueLabel(participantProperty.getValue())
-                    );
-                }
-                
-                for (Relationship relationship : mParticipant.getRelationships()) {
-                    mRelationshipButtons.get(relationship).setText(relationship.getParticipantRelated().getLabel());
-                }
             }
         }
     }
