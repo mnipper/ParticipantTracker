@@ -80,42 +80,7 @@ public class ParticipantDetailFragment extends Fragment {
         return v;
     }
     
-    /*
-     * Create the necessary mappings from participant relationships and properties
-     * to their corresponding UI elements.
-     * 
-     */
-    public void refreshView() {
-        mParticipantPropertyLabels = new HashMap<ParticipantProperty, TextView>();
-        mRelationshipButtons = new HashMap<Relationship, Button>();
-        
-        mParticipantPropertiesContainer.removeAllViews();
-        
-        for (ParticipantProperty participantProperty : mParticipant.getParticipantProperties()) {
-            mParticipantPropertyLabels.put(
-                    participantProperty,
-                    addKeyValueLabel(participantProperty.getProperty().getLabel(), participantProperty.getValue())
-            );
-        }
 
-        for (final Relationship relationship : mParticipant.getRelationships()) {
-            addHeader(relationship.getRelationshipType().getLabel());
-            
-            Button button = new Button(getActivity());
-            button.setText(relationship.getParticipantRelated().getLabel());
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent(getActivity(), ParticipantDetailActivity.class);
-                    i.putExtra(ParticipantDetailFragment.EXTRA_PARTICIPANT_ID, relationship.getParticipantRelated().getId());
-                    startActivity(i);
-                }
-            });
-            mParticipantPropertiesContainer.addView(button);
-            mRelationshipButtons.put(relationship, button);
-        }
-        
-        addKeyValueLabel("UUID", mParticipant.getUUID());
-    }
     
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -210,5 +175,42 @@ public class ParticipantDetailFragment extends Fragment {
         textView.setLayoutParams(layoutParams);
         mParticipantPropertiesContainer.addView(textView);
         textView.setText(label);                
+    }
+    
+    /*
+     * Create the necessary mappings from participant relationships and properties
+     * to their corresponding UI elements.
+     * 
+     */
+    private void refreshView() {
+        mParticipantPropertyLabels = new HashMap<ParticipantProperty, TextView>();
+        mRelationshipButtons = new HashMap<Relationship, Button>();
+        
+        mParticipantPropertiesContainer.removeAllViews();
+        
+        for (ParticipantProperty participantProperty : mParticipant.getParticipantProperties()) {
+            mParticipantPropertyLabels.put(
+                    participantProperty,
+                    addKeyValueLabel(participantProperty.getProperty().getLabel(), participantProperty.getValue())
+            );
+        }
+
+        for (final Relationship relationship : mParticipant.getRelationships()) {
+            addHeader(relationship.getRelationshipType().getLabel());
+            
+            Button button = new Button(getActivity());
+            button.setText(relationship.getParticipantRelated().getLabel());
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), ParticipantDetailActivity.class);
+                    i.putExtra(ParticipantDetailFragment.EXTRA_PARTICIPANT_ID, relationship.getParticipantRelated().getId());
+                    startActivity(i);
+                }
+            });
+            mParticipantPropertiesContainer.addView(button);
+            mRelationshipButtons.put(relationship, button);
+        }
+        
+        addKeyValueLabel("UUID", mParticipant.getUUID());
     }
 }
