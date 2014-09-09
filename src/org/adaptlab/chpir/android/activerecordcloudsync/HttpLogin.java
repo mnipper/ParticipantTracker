@@ -55,8 +55,8 @@ public class HttpLogin {
 			response = client.execute(delete);
 			if (response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300) {
                 Log.i(TAG, "Received OK HTTP status for delete");
-                ActiveRecordCloudSync.setAuthToken("");
-                ActiveRecordCloudSync.setUserEmail("");                
+                ActiveRecordCloudSync.setAuthToken(null);
+                ActiveRecordCloudSync.setUserEmail(null);                
             } else {
                 Log.e(TAG, "Received BAD HTTP status code " + response.getStatusLine().getStatusCode() + " for  delete request");
             }			
