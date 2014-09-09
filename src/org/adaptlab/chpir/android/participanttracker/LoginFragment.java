@@ -128,7 +128,8 @@ public class LoginFragment extends Fragment {
 		@Override
 		protected Void doInBackground(Void... params) {
 			if (NetworkNotificationUtils.checkForNetworkErrors(getActivity())) {
-	        	ActiveRecordCloudSync.logoutUser();
+	        	//ActiveRecordCloudSync.logoutUser();
+				//TODO Fix logout procedure
 			}
 			return null;
 		}
