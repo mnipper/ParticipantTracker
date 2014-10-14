@@ -35,4 +35,6 @@
     <string name="email_password_mismatch">Invalid email and password combination!</string>
     <string name="invalid_email_or_password">Invalid email or password!</string>
     <string name="edit">Edit</string>
+    <string name="encryption_required_title">Encryption required</string> 
+    <string name="encryption_required_text">This application requires that the device be encrypted.  Please encrypt your device to continue.</string>
 </resources>

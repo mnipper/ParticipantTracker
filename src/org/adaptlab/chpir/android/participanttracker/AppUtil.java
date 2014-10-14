@@ -13,7 +13,10 @@ import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import android.app.AlertDialog;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
@@ -21,12 +24,20 @@ import android.util.Log;
 import com.activeandroid.ActiveAndroid;
 
 public class AppUtil {
+    private final static boolean REQUIRE_SECURITY_CHECKS = true;
 	private static final String TAG = "AppUtil";
 	private static final boolean SEED_DB = false;
 	public static String ADMIN_PASSWORD_HASH;
 	public static String ACCESS_TOKEN;
 
 	public static final void appInit(Context context) {
+		
+		if (AppUtil.REQUIRE_SECURITY_CHECKS) {
+			if (!AppUtil.hasPassedDeviceSecurityChecks(context)) {
+				return;
+			}
+		}
+		
 		ADMIN_PASSWORD_HASH = context.getResources().getString(
 				R.string.admin_password_hash);
 		ACCESS_TOKEN = context.getResources().getString(
@@ -42,6 +53,25 @@ public class AppUtil {
 		ActiveRecordCloudSync.setEndPoint(AdminSettings.getInstance().getApiUrl());
 		addDataTables();
 		seedDb();
+	}
+
+	private static boolean hasPassedDeviceSecurityChecks(Context context) {
+		DevicePolicyManager devicePolicyManager = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+		if (devicePolicyManager.getStorageEncryptionStatus() != DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE) {
+			new AlertDialog.Builder(context)
+            .setTitle(R.string.encryption_required_title)
+            .setMessage(R.string.encryption_required_text)
+            .setCancelable(false)
+            .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    int pid = android.os.Process.myPid(); 
+                    android.os.Process.killProcess(pid);
+                }
+             })
+             .show();
+            return false;
+		}
+		return true;
 	}
 
 	private static void addDataTables() {
