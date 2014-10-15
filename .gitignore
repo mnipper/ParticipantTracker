@@ -27,6 +27,7 @@ proguard/
 # Crashlytics
 res/values/com_crashlytics_export_strings.xml
 crashlytics.properties
+assets/crashlytics-build.properties
 
 # API Keys
 res/values/api-keys.xml
