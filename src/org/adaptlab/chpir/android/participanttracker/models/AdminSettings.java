@@ -17,6 +17,10 @@ public class AdminSettings extends Model {
     private String mApiUrl;
     @Column(name="LastUpdateTime")
     private String mLastUpdateTime;
+    @Column(name = "ApiVersion")
+    private String mApiVersion;
+    @Column(name = "ApiKey")
+    private String mApiKey;
     
     private static final String TAG = "AdminSettings";
 	private static AdminSettings adminSettings;
@@ -75,4 +79,23 @@ public class AdminSettings extends Model {
     public String getLastUpdateTime() {
     	return mLastUpdateTime;
     }
+    
+    public void setApiKey(String apiKey) {
+    	mApiKey = apiKey;
+    	save();
+    }
+    
+    public String getApiKey() {
+    	return mApiKey;
+    }
+    
+    public void setApiVersion(String apiVersion) {
+    	mApiVersion = apiVersion;
+    	save();
+    }
+    
+    public String getApiVersion() {
+    	return mApiVersion;
+    }
+    
 }

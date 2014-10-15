@@ -16,8 +16,9 @@ public class AdminFragment extends Fragment {
 	private EditText mDeviceIdentifierEditText;
     private EditText mApiEndPointEditText;
     private TextView mLastUpdateTextView;
-    private TextView mBackendApiKeyTextView;
     private TextView mVersionCodeTextView;
+    private EditText mApiVersionEditText;
+    private EditText mApiKeyEditText;
     private Button mSaveButton;
 	
     @Override
@@ -32,14 +33,17 @@ public class AdminFragment extends Fragment {
         mDeviceIdentifierEditText.setText(getAdminSettingsInstanceDeviceId());
         
         mApiEndPointEditText = (EditText) view.findViewById(R.id.api_endpoint_edit_text);
-        mApiEndPointEditText.setText(getAdminSettingsInstanceApiUrl());
+        mApiEndPointEditText.setText(getAdminSettingsInstanceApiDomainName());
+        
+        mApiVersionEditText = (EditText) view.findViewById(R.id.api_version_text);
+        mApiVersionEditText.setText(getAdminSettingsInstanceApiVersion());
+        
+        mApiKeyEditText = (EditText) view.findViewById(R.id.api_key_text);
+        mApiKeyEditText.setText(getAdminSettingsInstanceApiKey());
         
         mLastUpdateTextView = (TextView) view.findViewById(R.id.last_update_label);
         mLastUpdateTextView.setText(mLastUpdateTextView.getText().toString() + getLastUpdateTime());
-        
-        mBackendApiKeyTextView = (TextView) view.findViewById(R.id.backend_api_key_label);
-        mBackendApiKeyTextView.setText(getString(R.string.api_key_label) + getString(R.string.backend_api_key));
-        
+         
         mVersionCodeTextView = (TextView) view.findViewById(R.id.version_code_label);
         mVersionCodeTextView.setText(getString(R.string.version_code) + AppUtil.getVersionCode(getActivity()));
         
@@ -47,14 +51,31 @@ public class AdminFragment extends Fragment {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AdminSettings.getInstance().setDeviceIdentifier(mDeviceIdentifierEditText.getText().toString());              
-                AdminSettings.getInstance().setApiUrl(mApiEndPointEditText.getText().toString());
+                AdminSettings.getInstance().setApiUrl(setApiUrl(mApiEndPointEditText.getText().toString()));
+                AdminSettings.getInstance().setApiVersion(mApiVersionEditText.getText().toString());
+                AdminSettings.getInstance().setApiKey(mApiKeyEditText.getText().toString());
+                ActiveRecordCloudSync.setAccessToken(getAdminSettingsInstanceApiKey());
                 ActiveRecordCloudSync.setEndPoint(getAdminSettingsInstanceApiUrl());
                 getActivity().finish();
             }
+
+			private String setApiUrl(String string) {
+			    char lastChar = string.charAt(string.length() - 1);
+			    if (lastChar != '/') string = string + "/";
+			    return string;
+			}
         });
 		return view;
 	}
 	
+	public String getAdminSettingsInstanceApiDomainName() {
+		return AdminSettings.getInstance().getApiUrl();
+	}
+
+	public String getAdminSettingsInstanceApiKey() {
+		return AdminSettings.getInstance().getApiKey();
+	}
+
 	public String getAdminSettingsInstanceDeviceId() {
 		return AdminSettings.getInstance().getDeviceIdentifier();
 	}
@@ -63,12 +84,17 @@ public class AdminFragment extends Fragment {
 		return AdminSettings.getInstance().getLastUpdateTime();
 	}
 	
-	public String getAdminSettingsInstanceApiUrl() {
-		return AdminSettings.getInstance().getApiUrl();
+	private String getAdminSettingsInstanceApiUrl() {
+	    String domainName = AdminSettings.getInstance().getApiUrl();
+		return domainName + "api/" + AdminSettings.getInstance().getApiVersion() + "/" ;
 	}
 
 	public String getAdminSettingsInstanceSyncInterval() {
 		return String.valueOf(AdminSettings.getInstance().getSyncIntervalInMinutes());
+	}
+	
+	public String getAdminSettingsInstanceApiVersion() {
+		return AdminSettings.getInstance().getApiVersion();
 	}
 	
 }

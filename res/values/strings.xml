@@ -24,7 +24,8 @@
     <string name="device_identifier">Device Identifier</string>
     <string name="sync_settings">Sync Settings</string>
     <string name="api_endpoint">Api Endpoint Url</string>
-    <string name="api_key_label">Api Key: </string>  
+    <string name="api_version">Api Version</string>
+    <string name="api_key">Api Key: </string>  
     <string name="last_update">Last update:  </string>
     <string name="system_information">System Information</string>
     <string name="version_code">Version Code: </string>
