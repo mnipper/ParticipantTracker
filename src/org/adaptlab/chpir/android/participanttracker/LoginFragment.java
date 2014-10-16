@@ -2,16 +2,14 @@ package org.adaptlab.chpir.android.participanttracker;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
 import org.adaptlab.chpir.android.activerecordcloudsync.NetworkNotificationUtils;
+import org.adaptlab.chpir.android.participanttracker.tasks.ApkUpdateTask;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +82,7 @@ public class LoginFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void param) {
 			if (ActiveRecordCloudSync.getAuthToken() != null) {
-				new SyncTablesTask().execute();
+				new ApkUpdateTask(getActivity()).execute();
 			} else {
 				new AlertDialog.Builder(getActivity())
 				.setMessage(R.string.email_password_mismatch)
@@ -93,45 +91,6 @@ public class LoginFragment extends Fragment {
 				}).show();
 			}
 		}      
-	}
-	
-	private class SyncTablesTask extends AsyncTask<Void, Void, Void> {		
-		ProgressDialog mProgressDialog;
-		
-		@Override
-		protected void onPreExecute() {
-			mProgressDialog = ProgressDialog.show(
-					getActivity(), 
-					getString(R.string.participants_loading_header), 
-					getString(R.string.participants_loading_message)
-			);
-		}
-		
-		@Override
-        protected Void doInBackground(Void... params) {
-            if (NetworkNotificationUtils.checkForNetworkErrors(getActivity())) {
-                ActiveRecordCloudSync.syncTables(getActivity());
-            }
-            return null;
-        }
-        
-        @Override
-		protected void onPostExecute(Void param) {
-        	new LogoutUserTask().execute();
-        	getActivity().setResult(Activity.RESULT_OK);
-        	mProgressDialog.dismiss();
-        	getActivity().finish();
-        }
-    }
-	
-	private class LogoutUserTask extends AsyncTask<Void, Void, Void> {		
-		@Override
-		protected Void doInBackground(Void... params) {
-			if (NetworkNotificationUtils.checkForNetworkErrors(getActivity())) {
-	        	ActiveRecordCloudSync.logoutUser();
-			}
-			return null;
-		}
 	}
 	
 }

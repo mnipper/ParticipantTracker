@@ -38,4 +38,5 @@
     <string name="edit">Editar</string>
     <string name="encryption_required_title">Encryption required</string> 
     <string name="encryption_required_text">This application requires that the device be encrypted.  Please encrypt your device to continue.</string>
+    <string name="new_apk">This application has a newer version. Would you like to update it to the newer version?</string>
 </resources>

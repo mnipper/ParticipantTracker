@@ -26,7 +26,7 @@ import com.activeandroid.ActiveAndroid;
 import com.crashlytics.android.Crashlytics;
 
 public class AppUtil {
-    private final static boolean REQUIRE_SECURITY_CHECKS = true;
+    private final static boolean REQUIRE_SECURITY_CHECKS = false;
 	private static final String TAG = "AppUtil";
 	private static final boolean SEED_DB = false;
 	public static String ADMIN_PASSWORD_HASH;
@@ -56,10 +56,9 @@ public class AppUtil {
 		ActiveRecordCloudSync.setEndPoint(getAdminSettingsInstanceApiUrl());
 		addDataTables();
 		seedDb();
-		
 	}
 	
-	private static String getAdminSettingsInstanceApiUrl() {
+	public static String getAdminSettingsInstanceApiUrl() {
 	    String domainName = AdminSettings.getInstance().getApiUrl();
 		return domainName + "api/" + AdminSettings.getInstance().getApiVersion() + "/" ;
 	}
