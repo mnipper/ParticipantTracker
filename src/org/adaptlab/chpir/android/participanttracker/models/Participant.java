@@ -50,6 +50,11 @@ public class Participant extends SendReceiveModel {
             jsonObject.put("participant_type_id", getParticipantType().getRemoteId());
             jsonObject.put("uuid", getUUID());
             
+            if (this.getRemoteId() == null) {
+                jsonObject.put("device_uuid", AdminSettings.getInstance().getDeviceIdentifier());
+                jsonObject.put("device_label", AdminSettings.getInstance().getDeviceLabel());
+            }
+            
             json.put("participant", jsonObject);
         } catch (JSONException je) {
             Log.e(TAG, "JSON exception", je);
@@ -229,6 +234,7 @@ public class Participant extends SendReceiveModel {
 			if (participantType != null) {
 				participant.setParticipantType(participantType);
 			}
+			
 			if (jsonObject.isNull("deleted_at")) {
 				participant.save();
 			} else {

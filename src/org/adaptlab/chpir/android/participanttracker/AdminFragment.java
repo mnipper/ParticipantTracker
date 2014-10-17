@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 public class AdminFragment extends Fragment {
 	private EditText mDeviceIdentifierEditText;
+    private TextView mDeviceLabelTextView;
+    private EditText mDeviceLabelEditText;
     private EditText mApiEndPointEditText;
     private TextView mLastUpdateTextView;
     private TextView mVersionCodeTextView;
@@ -31,6 +33,9 @@ public class AdminFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_admin_settings, parent, false);
 		mDeviceIdentifierEditText = (EditText) view.findViewById(R.id.device_identifier_edit_text);
         mDeviceIdentifierEditText.setText(getAdminSettingsInstanceDeviceId());
+        
+        mDeviceLabelEditText = (EditText) view.findViewById(R.id.device_label_edit_text);
+        mDeviceLabelEditText.setText(AdminSettings.getInstance().getDeviceLabel());
         
         mApiEndPointEditText = (EditText) view.findViewById(R.id.api_endpoint_edit_text);
         mApiEndPointEditText.setText(getAdminSettingsInstanceApiDomainName());
@@ -54,6 +59,7 @@ public class AdminFragment extends Fragment {
                 AdminSettings.getInstance().setApiUrl(setApiUrl(mApiEndPointEditText.getText().toString()));
                 AdminSettings.getInstance().setApiVersion(mApiVersionEditText.getText().toString());
                 AdminSettings.getInstance().setApiKey(mApiKeyEditText.getText().toString());
+                AdminSettings.getInstance().setDeviceLabel(mDeviceLabelEditText.getText().toString());
                 ActiveRecordCloudSync.setAccessToken(getAdminSettingsInstanceApiKey());
                 ActiveRecordCloudSync.setEndPoint(getAdminSettingsInstanceApiUrl());
                 getActivity().finish();
