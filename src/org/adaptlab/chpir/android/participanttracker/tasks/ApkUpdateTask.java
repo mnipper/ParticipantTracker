@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.UUID;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
 import org.adaptlab.chpir.android.activerecordcloudsync.NetworkNotificationUtils;
@@ -33,7 +34,6 @@ public class ApkUpdateTask extends AsyncTask<Void, Void, Void> {
 	private int mApkId;
 	private Integer mLatestVersion;
 	private String mFileName;
-	private File mFile;
 	
 	public ApkUpdateTask(Context context) {
 		mContext = context;
@@ -59,12 +59,16 @@ public class ApkUpdateTask extends AsyncTask<Void, Void, Void> {
 					}
 				})
 				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-	                   public void onClick(DialogInterface dialog, int id) {}
+	                   public void onClick(DialogInterface dialog, int id) {
+	                	   new SyncTablesTask(mContext).execute();
+	                   }
 	            }).show();
 	        } else {
 	        	new SyncTablesTask(mContext).execute();
 	        }
-		}
+		} else {
+        	new SyncTablesTask(mContext).execute();
+        }
 	}
 
 	private void checkLatestApk() {
@@ -78,8 +82,9 @@ public class ApkUpdateTask extends AsyncTask<Void, Void, Void> {
 		        JSONObject obj = new JSONObject(jsonString);
 		        mLatestVersion = obj.getInt("version");
 		        mApkId = obj.getInt("id");
-		        mFileName = obj.getString("apk_update_file_name");
+		        mFileName = UUID.randomUUID().toString() + ".apk";
 		        Log.i(TAG, "Latest version is: " + mLatestVersion);
+		        Log.i(TAG, "Old version is: " + AppUtil.getVersionCode(mContext));
 	        }
 		} catch (ConnectException cre) {
             Log.e(TAG, "Connection was refused", cre);
@@ -121,6 +126,7 @@ public class ApkUpdateTask extends AsyncTask<Void, Void, Void> {
     }
 	
 	private class DownloadApkTask extends AsyncTask<Void, Void, Void> {
+		private File mFile;
 
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -133,7 +139,7 @@ public class ApkUpdateTask extends AsyncTask<Void, Void, Void> {
 		@Override 
 		protected void onPostExecute(Void param) {
 			Intent intent = new Intent();
-			intent.setAction(Intent.ACTION_VIEW);
+			intent.setAction(Intent.ACTION_VIEW);			
 			intent.setDataAndType(Uri.fromFile(mFile), "application/vnd.android.package-archive");
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			mContext.startActivity(intent);

@@ -26,7 +26,7 @@ import com.activeandroid.ActiveAndroid;
 import com.crashlytics.android.Crashlytics;
 
 public class AppUtil {
-    private final static boolean REQUIRE_SECURITY_CHECKS = false;
+    private final static boolean REQUIRE_SECURITY_CHECKS = true;
 	private static final String TAG = "AppUtil";
 	private static final boolean SEED_DB = false;
 	public static String ADMIN_PASSWORD_HASH;
@@ -42,7 +42,7 @@ public class AppUtil {
 		
 		ADMIN_PASSWORD_HASH = context.getResources().getString(R.string.admin_password_hash);
 		ACCESS_TOKEN = AdminSettings.getInstance().getApiKey();
-
+		
 		if (!BuildConfig.DEBUG)
             Crashlytics.start(context);
 		
