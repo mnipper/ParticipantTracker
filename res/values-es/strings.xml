@@ -41,4 +41,5 @@
     <string name="new_apk">Esta aplicación cuenta con una versión más nueva. ¿Te gustaría actualizarla a la versión más reciente?</string>
     <string name="enter_email">Ingrese correo electrónico</string>
     <string name="enter_password">Introduzca la contraseña</string>
+    <string name="device_label">Device Label</string>
 </resources>
