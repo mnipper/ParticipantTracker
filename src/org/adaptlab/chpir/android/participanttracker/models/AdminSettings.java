@@ -21,6 +21,8 @@ public class AdminSettings extends Model {
     private String mApiVersion;
     @Column(name = "ApiKey")
     private String mApiKey;
+    @Column(name = "DeviceLabel")
+    private String mDeviceLabel;
     
     private static final String TAG = "AdminSettings";
 	private static AdminSettings adminSettings;
@@ -96,6 +98,15 @@ public class AdminSettings extends Model {
     
     public String getApiVersion() {
     	return mApiVersion;
+    }
+    
+    public void setDeviceLabel(String deviceLabel) {
+        mDeviceLabel = deviceLabel;
+        save();
+    }
+    
+    public String getDeviceLabel() {
+        return mDeviceLabel;
     }
     
 }

@@ -41,4 +41,5 @@
     <string name="new_apk">This application has a newer version. Would you like to update it to the newer version?</string>
     <string name="enter_email">Enter email</string>
     <string name="enter_password">Enter password</string>
+    <string name="device_label">Device Label</string>
 </resources>
