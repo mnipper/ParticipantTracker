@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.adaptlab.chpir.android.participanttracker.models.AdminSettings;
+import org.apache.commons.codec.CharEncoding;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -47,7 +48,7 @@ public class HttpPushr {
 
             if (!element.isSent() && element.readyToSend()) {
                 try {
-                	StringEntity se = new StringEntity(element.toJSON().toString());
+                	StringEntity se = new StringEntity(element.toJSON().toString(), CharEncoding.UTF_8);
                     se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                     if (element.getRemoteId() != null) {
                     	HttpPut put = new HttpPut(ActiveRecordCloudSync.getEndPoint() + mRemoteTableName + '/' + element.getRemoteId().toString() + '/' + ActiveRecordCloudSync.getParams());

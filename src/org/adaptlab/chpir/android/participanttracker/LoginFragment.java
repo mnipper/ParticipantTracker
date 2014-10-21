@@ -35,9 +35,9 @@ public class LoginFragment extends Fragment {
 		
 		view.findViewById(R.id.login_label);
 		mEmailAddress = (EditText) view.findViewById(R.id.txt_email);
-		mEmailAddress.setHint("Enter Email");
+		mEmailAddress.setHint(R.string.enter_email);
 		mPassword = (EditText) view.findViewById(R.id.txt_password);
-		mPassword.setHint("Enter Password");
+		mPassword.setHint(R.string.enter_password);
 		
 		mLoginButton = (Button) view.findViewById(R.id.remote_login_button);
 		mLoginButton.setOnClickListener(new View.OnClickListener() {
