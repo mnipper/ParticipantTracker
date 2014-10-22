@@ -19,11 +19,13 @@ public class SyncTablesTask extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPreExecute() {
-		mProgressDialog = ProgressDialog.show(
-				mContext, 
-				mContext.getString(R.string.participants_loading_header), 
-				mContext.getString(R.string.participants_loading_message)
-		);
+	    if (! ((Activity) mContext).isFinishing()) {
+    		mProgressDialog = ProgressDialog.show(
+    				mContext, 
+    				mContext.getString(R.string.participants_loading_header), 
+    				mContext.getString(R.string.participants_loading_message)
+    		);
+	    }
 	}
 	
 	@Override
