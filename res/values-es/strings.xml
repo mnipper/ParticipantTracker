@@ -39,4 +39,5 @@
     <string name="encryption_required_title">Codificación requerida</string> 
     <string name="encryption_required_text">Esta aplicación requiere que el dispositivo sea codificado. Por favor codifique su dispositivo para continuar.</string>
     <string name="new_apk">Esta aplicación cuenta con una versión más nueva. ¿Te gustaría actualizarla a la versión más reciente?</string>
+        <string name="device_label">Device Label</string>
 </resources>
