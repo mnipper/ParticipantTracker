@@ -43,6 +43,8 @@ public class NetworkNotificationUtils {
      * This WILL throw an exception if executed on UI thread since it pings a URL.
      */
     public static boolean checkForNetworkErrors(Context context) {
+        if (context == null) return false;
+        
         if (!isNetworkAvailable(context.getApplicationContext())) {
             Log.i(TAG, "Network is not available...");
             showNotification(context, android.R.drawable.ic_dialog_alert, R.string.network_unavailable);
