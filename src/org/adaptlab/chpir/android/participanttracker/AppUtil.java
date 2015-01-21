@@ -26,7 +26,7 @@ import com.activeandroid.ActiveAndroid;
 import com.crashlytics.android.Crashlytics;
 
 public class AppUtil {
-    private final static boolean REQUIRE_SECURITY_CHECKS = true;
+    private final static boolean REQUIRE_SECURITY_CHECKS = false;
 	private static final String TAG = "AppUtil";
 	private static final boolean SEED_DB = false;
 	public static String ADMIN_PASSWORD_HASH;
@@ -109,11 +109,11 @@ public class AppUtil {
 
 			for (ParticipantType participantType : ParticipantType.getAll()) {
 				Property nameProperty = new Property("Name",
-						Property.PropertyType.STRING, true, participantType);
+						Property.PropertyType.STRING, true, participantType, "PARTICIPANT_ID");
 				Property ageProperty = new Property("Age",
-						Property.PropertyType.INTEGER, false, participantType);
+						Property.PropertyType.INTEGER, false, participantType, "PARTICIPANT_ID");
 				Property dateProperty = new Property("Birthday",
-						Property.PropertyType.DATE, false, participantType);
+						Property.PropertyType.DATE, false, participantType, "PARTICIPANT_ID");
 
 				nameProperty.setUseAsLabel(true);
 

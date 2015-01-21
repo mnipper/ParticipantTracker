@@ -16,7 +16,10 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -134,7 +137,7 @@ public class NewParticipantFragment extends Fragment {
         mParticipantPropertiesContainer.addView(textView);
     }
     
-    private void attachFieldForProperty(Property property) {       
+    private void attachFieldForProperty(final Property property) {       
         String propertyValue = "";        
         if (mParticipant.hasParticipantProperty(property)) {
             propertyValue = mParticipant.getParticipantProperty(property).getValue();
@@ -145,18 +148,37 @@ public class NewParticipantFragment extends Fragment {
         if (property.getTypeOf() == Property.PropertyType.INTEGER) {
             propertyView = new EditText(getActivity());            
             ((EditText) propertyView).setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-            ((EditText) propertyView).setText(propertyValue);         
+            ((EditText) propertyView).setText(propertyValue);       
+            attachValidator(property, (EditText) propertyView);
         } else if (property.getTypeOf() == Property.PropertyType.DATE) {
             propertyView = new SerializableDatePicker(getActivity());           
             ((SerializableDatePicker) propertyView).setCalendarViewShown(false);
             ((SerializableDatePicker) propertyView).deserialize(propertyValue);           
         } else {
             propertyView = new EditText(getActivity());            
-            ((EditText) propertyView).setText(propertyValue);          
+            ((EditText) propertyView).setText(propertyValue);
+            attachValidator(property, (EditText) propertyView);           
         }
-                
+        
         mPropertyFields.put(property, propertyView);
         mParticipantPropertiesContainer.addView(propertyView);   
+    }
+    
+    private void attachValidator(final Property property, final EditText propertyView) {
+        propertyView.addTextChangedListener(new TextWatcher(){
+            public void afterTextChanged(Editable s) {
+                if (property.getValidationCallable() == null) return;
+
+                if (!property.getValidationCallable().validate(s.toString())) {
+                    propertyView.setError(getString(R.string.invalid_validator));
+                } else {
+                    propertyView.setError(null);
+                }
+            }
+                
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+       });
     }
        
     private void attachSelectRelationshipButton(final RelationshipType relationshipType) {

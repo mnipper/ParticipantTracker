@@ -42,4 +42,5 @@
     <string name="enter_email">Enter email</string>
     <string name="enter_password">Enter password</string>
     <string name="device_label">Device Label</string>
+    <string name="invalid_validator">This is invalid</string>
 </resources>

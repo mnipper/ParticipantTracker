@@ -3,6 +3,8 @@ package org.adaptlab.chpir.android.participanttracker.models;
 import java.util.List;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.ReceiveModel;
+import org.adaptlab.chpir.android.participanttracker.validators.ParticipantIdValidator;
+import org.adaptlab.chpir.android.participanttracker.validators.ValidationCallable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +19,7 @@ public class Property extends ReceiveModel {
     private static final String TAG = "Property";
     
     public static enum PropertyType {STRING, DATE, INTEGER};
+    public static enum Validator {PARTICIPANT_ID};
 
     @Column(name = "RemoteId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long mRemoteId;
@@ -30,17 +33,20 @@ public class Property extends ReceiveModel {
     private ParticipantType mParticipantType;
     @Column(name = "UseAsLabel")
     private boolean mUseAsLabel;
+    @Column(name = "Validator")
+    private Validator mValidator;
     
     public Property() {
         super();
     }
     
-    public Property(String label, PropertyType typeOf, boolean required, ParticipantType participantType) {
+    public Property(String label, PropertyType typeOf, boolean required, ParticipantType participantType, String validator) {
         super();
         setLabel(label);
         setTypeOf(typeOf);
         setRequired(required);
         setParticipantType(participantType);
+        setValidator(validator);
     }
     
     @Override
@@ -59,6 +65,7 @@ public class Property extends ReceiveModel {
             property.setRequired(jsonObject.getBoolean("required"));
             property.setParticipantType(ParticipantType.findByRemoteId(jsonObject.getLong("participant_type_id")));
             property.setUseAsLabel(jsonObject.getBoolean("use_as_label"));
+            property.setValidator(jsonObject.getString("validator"));
             if (jsonObject.isNull("deleted_at")) {
             	property.save();
             } else {
@@ -119,6 +126,14 @@ public class Property extends ReceiveModel {
         mUseAsLabel = useAsLabel;
     }
     
+    public ValidationCallable getValidationCallable() {
+        if (mValidator == Validator.PARTICIPANT_ID) {
+            return new ParticipantIdValidator();
+        } else {
+            return null;
+        }
+    }
+    
     private void setLabel(String label) {
         mLabel = label;
     }
@@ -141,5 +156,14 @@ public class Property extends ReceiveModel {
     
     private void setParticipantType(ParticipantType participantType) {
         mParticipantType = participantType;
+    }
+    
+    private void setValidator(String validator) {
+        for (Validator v: Validator.values()) {
+            if (v.name().equals(validator)) {
+                mValidator = Validator.valueOf(validator);
+                return;
+            }
+        }
     }
 }
