@@ -1,6 +1,5 @@
 package org.adaptlab.chpir.android.participanttracker.validators;
 
-import org.adaptlab.chpir.android.participanttracker.VerhoeffErrorDetection;
 
 public class ParticipantIdValidator implements ValidationCallable {
     

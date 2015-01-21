@@ -1,4 +1,4 @@
-package org.adaptlab.chpir.android.participanttracker;
+package org.adaptlab.chpir.android.participanttracker.validators;
 
 public class VerhoeffErrorDetection {
     private static int[][] op= {
