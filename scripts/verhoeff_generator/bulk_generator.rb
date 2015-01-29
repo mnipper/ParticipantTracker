@@ -1,8 +1,10 @@
 require './participant_verhoeff'
+require 'csv'
 
-ParticipantTypes = ['A', 'B', 'C']
-FacilityRange = 0..5
-ParticipantRange = 0..99
+ParticipantTypes = ['N', 'E', 'V']
+FacilityRange = 1..599
+ParticipantRange = 1..99
+CSVFilePath = "participant_ids.csv"
 
 participants = []
 
@@ -18,4 +20,9 @@ ParticipantTypes.each do |type|
   end
 end
 
-p participants
+CSV.open(CSVFilePath, "wb") do |csv|
+  csv << ['Participant Type', 'Center', 'ID', 'Check', 'Participant ID']
+  participants.each do |participant|
+    csv << participant
+  end
+end
