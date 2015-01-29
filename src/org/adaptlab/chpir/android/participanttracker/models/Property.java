@@ -35,9 +35,12 @@ public class Property extends ReceiveModel {
     private boolean mUseAsLabel;
     @Column(name = "Validator")
     private Validator mValidator;
+    @Column(name = "IncludeInMetadata")
+    private boolean mIncludeInMetadata;
     
     public Property() {
         super();
+        mIncludeInMetadata = false;
     }
     
     public Property(String label, PropertyType typeOf, boolean required, ParticipantType participantType, String validator) {
@@ -66,6 +69,7 @@ public class Property extends ReceiveModel {
             property.setParticipantType(ParticipantType.findByRemoteId(jsonObject.getLong("participant_type_id")));
             property.setUseAsLabel(jsonObject.getBoolean("use_as_label"));
             property.setValidator(jsonObject.getString("validator"));
+            property.setIncludeInMetadata(jsonObject.getBoolean("include_in_metadata"));
             if (jsonObject.isNull("deleted_at")) {
             	property.save();
             } else {
@@ -134,6 +138,10 @@ public class Property extends ReceiveModel {
         }
     }
     
+    public boolean isIncludedInMetadata() {
+        return mIncludeInMetadata;
+    }
+    
     private void setLabel(String label) {
         mLabel = label;
     }
@@ -165,5 +173,9 @@ public class Property extends ReceiveModel {
                 return;
             }
         }
+    }
+    
+    private void setIncludeInMetadata(boolean include) {
+        mIncludeInMetadata = include;
     }
 }
