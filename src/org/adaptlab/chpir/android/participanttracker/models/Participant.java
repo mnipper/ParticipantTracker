@@ -1,5 +1,6 @@
 package org.adaptlab.chpir.android.participanttracker.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -261,11 +262,37 @@ public class Participant extends SendReceiveModel {
 	
 	public String getMetadata() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        
         jsonObject.put("participant_uuid", getUUID());
         jsonObject.put("participant_type", getParticipantType().getLabel());
+
+        for (ParticipantProperty participantProperty : getMetadataParticipantProperties(this)) {
+            jsonObject.put(participantProperty.getProperty().getLabel(), participantProperty.getValue());
+        }
+        
+        // Add metadata for relationships
         for (Relationship relationship : getRelationships()) {
             jsonObject.put(relationship.getRelationshipType().getLabel(), relationship.getParticipantRelated().getUUID());
+            
+            for (ParticipantProperty participantProperty : getMetadataParticipantProperties(relationship.getParticipantRelated())) {
+                jsonObject.put(relationship.getRelationshipType().getLabel() + " - " + participantProperty.getProperty().getLabel(), participantProperty.getValue());
+            }
         }
+        
         return jsonObject.toString();
+	}
+	
+	private List<ParticipantProperty> getMetadataParticipantProperties(Participant participant) {
+	    List<ParticipantProperty> participantProperties = new ArrayList<ParticipantProperty>();
+	    
+        for (Property property : participant.getProperties()) {
+            if (property.isIncludedInMetadata()) {
+                if (participant.hasParticipantProperty(property)) {
+                    participantProperties.add(participant.getParticipantProperty(property));
+                }
+            }
+        }
+	    
+	    return participantProperties;
 	}
 }
