@@ -13,7 +13,6 @@ public class VerhoeffErrorDetection {
         {8, 7, 6, 5, 9, 3, 2, 1, 0, 4},
         {9, 8, 7, 6, 5, 4, 3, 2, 1, 0} };
 
-     private static int[] inv = {0, 4, 3, 2, 1, 5, 6, 7, 8, 9};
      private static int[][] F = new int[8][];
      private static int[] F0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
      private static int[] F1 = {1, 5, 7, 6, 2, 8, 3, 0, 9, 4};
