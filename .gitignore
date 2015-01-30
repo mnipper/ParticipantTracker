@@ -39,3 +39,7 @@ libs/participanttracker_pk
 #Gradle
 build/
 .gradle/
+.idea/
+gradle/
+scripts/verhoeff_generator/*.csv
+ParticipantTracker.iml
