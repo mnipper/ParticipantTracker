@@ -138,6 +138,10 @@ public class Property extends ReceiveModel {
         }
     }
     
+    public boolean hasValidator() {
+        return getValidationCallable() != null;
+    }
+    
     public boolean isIncludedInMetadata() {
         return mIncludeInMetadata;
     }

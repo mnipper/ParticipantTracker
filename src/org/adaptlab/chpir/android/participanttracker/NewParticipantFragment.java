@@ -117,6 +117,16 @@ public class NewParticipantFragment extends Fragment {
         return missingField;
     }
     
+    private boolean hasInvalidValidator() {
+        for (Property property : mParticipantType.getProperties()) {
+            if (property.hasValidator() && !property.getValidationCallable().validate(getValueForProperty(property))) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     private void attachRequiredLabel(Property property) {
         if (property.getRequired()) {
             TextView requiredTextView = new TextView(getActivity());
@@ -210,7 +220,7 @@ public class NewParticipantFragment extends Fragment {
     }
     
     private void saveParticipant() {
-        if (isMissingRequiredValue()) {
+        if (isMissingRequiredValue() || hasInvalidValidator()) {
             return;
         }
         
