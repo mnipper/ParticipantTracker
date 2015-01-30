@@ -178,7 +178,7 @@ public class NewParticipantFragment extends Fragment {
     private void attachValidator(final Property property, final EditText propertyView) {
         propertyView.addTextChangedListener(new TextWatcher(){
             public void afterTextChanged(Editable s) {
-                if (property.getValidationCallable() == null) return;
+                if (!property.hasValidator()) return;
 
                 if (!property.getValidationCallable().validate(s.toString())) {
                     propertyView.setError(getString(R.string.invalid_validator));
