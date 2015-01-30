@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.graphics.PorterDuff;
 
 public class NewParticipantFragment extends Fragment {
     private static final String TAG = "NewParticipantFragment";
@@ -181,8 +182,10 @@ public class NewParticipantFragment extends Fragment {
 
                 if (!property.getValidationCallable().validate(s.toString())) {
                     propertyView.setError(getString(R.string.invalid_validator));
+                    propertyView.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
                 } else {
                     propertyView.setError(null);
+                    propertyView.getBackground().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP);
                 }
             }
                 
