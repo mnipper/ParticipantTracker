@@ -43,4 +43,5 @@
     <string name="enter_password">Introduzca contraseña</string>
     <string name="device_label">Device Label</string>
     <string name="invalid_validator">Esto es incorrecto</string>
+        <string name="invalid_validator_toast">es incorrecto!</string>
 </resources>

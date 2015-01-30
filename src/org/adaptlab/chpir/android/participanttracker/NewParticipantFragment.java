@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.graphics.PorterDuff;
 
 public class NewParticipantFragment extends Fragment {
@@ -119,13 +120,22 @@ public class NewParticipantFragment extends Fragment {
     }
     
     private boolean hasInvalidValidator() {
+        boolean invalid = false;
         for (Property property : mParticipantType.getProperties()) {
             if (property.hasValidator() && !property.getValidationCallable().validate(getValueForProperty(property))) {
-                return true;
+                if (mPropertyFields.get(property) instanceof EditText) {
+                    ((EditText) mPropertyFields.get(property)).setError(getString(R.string.invalid_validator));
+                }
+                
+                Toast.makeText(getActivity(),
+                        property.getLabel() + " " + getString(R.string.invalid_validator_toast),
+                        Toast.LENGTH_SHORT).show();
+                
+                invalid = true;
             }
         }
         
-        return false;
+        return invalid;
     }
     
     private void attachRequiredLabel(Property property) {
@@ -177,10 +187,19 @@ public class NewParticipantFragment extends Fragment {
     
     private void attachValidator(final Property property, final EditText propertyView) {
         propertyView.addTextChangedListener(new TextWatcher(){
+            private boolean backspacing = false;
+            
             public void afterTextChanged(Editable s) {
                 if (!property.hasValidator()) return;
 
-                if (!property.getValidationCallable().validate(s.toString())) {
+                if (!backspacing) {
+                    propertyView.removeTextChangedListener(this);
+                    propertyView.setText(property.getValidationCallable().formatText(s.toString()));
+                    propertyView.setSelection(propertyView.getText().length());
+                    propertyView.addTextChangedListener(this);
+                }
+                
+                if (!property.getValidationCallable().validate(propertyView.getText().toString())) {
                     propertyView.setError(getString(R.string.invalid_validator));
                     propertyView.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
                 } else {
@@ -189,8 +208,11 @@ public class NewParticipantFragment extends Fragment {
                 }
             }
                 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-            public void onTextChanged(CharSequence s, int start, int before, int count){}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            
+            public void onTextChanged(CharSequence s, int start, int before, int count){
+                backspacing = before > count;
+            }
        });
     }
        
