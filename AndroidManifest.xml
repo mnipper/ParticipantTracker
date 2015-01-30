@@ -22,7 +22,9 @@
         <activity
             android:name=".ParticipantListActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,16 +38,24 @@
                    android:name="android.app.default_searchable"
                    android:value=".ParticipantListActivity" />
         </activity>
-        <activity android:name=".AdminActivity" />
+        <activity android:name=".AdminActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <service android:name="org.adaptlab.chpir.android.activerecordcloudsync.PollService" />
         <receiver android:name="org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver">
             <intent-filter>
                 <action android:name="org.adaptlab.chpir.android.survey.instrument_list" />
             </intent-filter>
         </receiver>
-        <activity android:name=".ParticipantDetailActivity" />
-        <activity android:name=".NewParticipantActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".ParticipantDetailActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".NewParticipantActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity android:name=".LoginActivity"  
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <meta-data android:name="AA_DB_NAME" android:value="Tracking.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="5" />
         <meta-data android:name="com.crashlytics.ApiKey" android:value="@string/crashlytics_api_key"/>   
