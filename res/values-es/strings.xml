@@ -43,5 +43,6 @@
     <string name="enter_password">Introduzca contraseña</string>
     <string name="device_label">Device Label</string>
     <string name="invalid_validator">Esto es incorrecto</string>
-        <string name="invalid_validator_toast">es incorrecto!</string>
+    <string name="invalid_validator_toast">es incorrecto!</string>
+    <string name="ensure_survey_open">Please ensure that the Survey application is open!</string>
 </resources>

@@ -28,13 +28,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ParticipantDetailFragment extends Fragment {
     private static final String TAG = "ParticipantDetailFragment";
     public final static String EXTRA_PARTICIPANT_ID = 
             "org.adaptlab.chpir.participanttracker.participantdetailfragment.participant_id";
+    public final static String SURVEY_PACKAGE_NAME =
+            "org.adaptlab.chpir.android.survey";
     public final static String EXTRA_PARTICIPANT_METADATA =
-            "org.adaptlab.chpir.android.survey.metadata";
+            SURVEY_PACKAGE_NAME + ".metadata";
     private final static int UPDATE_PARTICIPANT = 0;
     
     private Participant mParticipant;
@@ -143,9 +146,13 @@ public class ParticipantDetailFragment extends Fragment {
     }
     
     private void newSurvey() {
-        Intent i = new Intent();
-        i.setAction(InstrumentListReceiver.GET_INSTRUMENT_LIST);
-        getActivity().getApplicationContext().sendBroadcast(i);
+        if (AppUtil.checkForRunningProcess(getActivity(), SURVEY_PACKAGE_NAME)) {
+            Intent i = new Intent();
+            i.setAction(InstrumentListReceiver.GET_INSTRUMENT_LIST);
+            getActivity().getApplicationContext().sendBroadcast(i);
+        } else {
+            Toast.makeText(getActivity(), R.string.ensure_survey_open, Toast.LENGTH_LONG).show();
+        }
     }
     
     /*
