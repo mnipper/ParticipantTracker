@@ -206,7 +206,7 @@ public class Participant extends SendReceiveModel {
     public String getLabel() {
         String label = "";
         for (ParticipantProperty participantProperty : getParticipantProperties()) {
-            if (participantProperty.getProperty().getUseAsLabel()) {
+            if (participantProperty.getProperty() != null && participantProperty.getProperty().getUseAsLabel()) {
                 if (!label.isEmpty()) label += LABEL_DELIMITER;
                 label += participantProperty.getValue();
             }
