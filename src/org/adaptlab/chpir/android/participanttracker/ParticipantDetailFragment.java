@@ -1,14 +1,5 @@
 package org.adaptlab.chpir.android.participanttracker;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver;
-import org.adaptlab.chpir.android.participanttracker.models.Participant;
-import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
-import org.adaptlab.chpir.android.participanttracker.models.Relationship;
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -30,6 +21,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver;
+import org.adaptlab.chpir.android.participanttracker.Receivers.ReceivedInstrumentDetails;
+import org.adaptlab.chpir.android.participanttracker.models.Participant;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
+import org.adaptlab.chpir.android.participanttracker.models.Relationship;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ParticipantDetailFragment extends Fragment {
     private static final String TAG = "ParticipantDetailFragment";
     public final static String EXTRA_PARTICIPANT_ID = 
@@ -42,6 +45,7 @@ public class ParticipantDetailFragment extends Fragment {
     
     private Participant mParticipant;
     private static String sParticipantMetadata;
+    private static String sParticipantType;
     private LinearLayout mParticipantPropertiesContainer;
     private static Activity sActivity;
     private Map<ParticipantProperty, TextView> mParticipantPropertyLabels;
@@ -65,7 +69,9 @@ public class ParticipantDetailFragment extends Fragment {
             sParticipantMetadata = mParticipant.getMetadata();
         } catch (JSONException e) {
             Log.e(TAG, "Could not parse participant metadata for " + mParticipant.getId());
-        }  
+        }
+        
+        sParticipantType = mParticipant.getParticipantType().getLabel();
         
         getActivity().setTitle(mParticipant.getLabel());
     }
@@ -126,15 +132,26 @@ public class ParticipantDetailFragment extends Fragment {
         sActivity = getActivity();
     }
     
-    public static void displayInstrumentPicker(String[] instrumentTitleList, final long[] instrumentIdList) {
+    public static void displayInstrumentPicker(final List<ReceivedInstrumentDetails> instrumentDetails) {
         AlertDialog.Builder builder = new AlertDialog.Builder(sActivity);
         builder.setTitle(sActivity.getString(R.string.choose_instrument));
-        builder.setSingleChoiceItems(instrumentTitleList, -1, new DialogInterface.OnClickListener() {
+        
+        final List<String> instrumentTitleList = new ArrayList<String>();
+        final List<Long> instrumentIdList = new ArrayList<Long>();
+
+        for (ReceivedInstrumentDetails d : instrumentDetails) {
+            if (d.getParticipantType().equals("") || d.getParticipantType().equals(sParticipantType)) {
+                instrumentTitleList.add(d.getTitle());
+                instrumentIdList.add(d.getId());
+            }
+        }
+        
+        builder.setSingleChoiceItems(instrumentTitleList.toArray(new String[instrumentTitleList.size()]), -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {             
                 Intent i = new Intent();
                 i.setAction(InstrumentListReceiver.START_SURVEY);
-                i.putExtra(InstrumentListReceiver.START_SURVEY_INSTRUMENT_ID, instrumentIdList[which]);
+                i.putExtra(InstrumentListReceiver.START_SURVEY_INSTRUMENT_ID, instrumentIdList.get(which));
                 i.putExtra(EXTRA_PARTICIPANT_METADATA, sParticipantMetadata);
                 sActivity.sendBroadcast(i);
                 dialog.cancel();
