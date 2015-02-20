@@ -1,25 +1,26 @@
 package org.adaptlab.chpir.android.participanttracker.models;
 
-import java.util.List;
-
-import org.adaptlab.chpir.android.activerecordcloudsync.ReceiveModel;
-import org.adaptlab.chpir.android.participanttracker.validators.ParticipantIdValidator;
-import org.adaptlab.chpir.android.participanttracker.validators.ValidationCallable;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
+import org.adaptlab.chpir.android.activerecordcloudsync.ReceiveModel;
+import org.adaptlab.chpir.android.participanttracker.validators.ParticipantIdValidator;
+import org.adaptlab.chpir.android.participanttracker.validators.CenterIdValidator;
+import org.adaptlab.chpir.android.participanttracker.validators.ValidationCallable;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
 @Table(name = "Property")
 public class Property extends ReceiveModel {
     private static final String TAG = "Property";
     
     public static enum PropertyType {STRING, DATE, INTEGER};
-    public static enum Validator {PARTICIPANT_ID};
+    public static enum Validator {PARTICIPANT_ID, CENTER_ID};
 
     @Column(name = "RemoteId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long mRemoteId;
@@ -133,6 +134,8 @@ public class Property extends ReceiveModel {
     public ValidationCallable getValidationCallable() {
         if (mValidator == Validator.PARTICIPANT_ID) {
             return new ParticipantIdValidator();
+        } else if (mValidator == Validator.CENTER_ID) {
+              return new CenterIdValidator();
         } else {
             return null;
         }
