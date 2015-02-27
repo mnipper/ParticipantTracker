@@ -77,14 +77,11 @@ public class ApkUpdateTask extends AsyncTask<Void, Void, Void> {
 		String url = AppUtil.getAdminSettingsInstanceApiUrl() + "android_updates" + ActiveRecordCloudSync.getParams();
 		try {
 			String jsonString = getUrl(url);
-	        Log.i(TAG, "Got JSON String: " + jsonString);
-	        if (jsonString != null) {
+	        if (jsonString != null && !jsonString.equals("null")) {
 		        JSONObject obj = new JSONObject(jsonString);
 		        mLatestVersion = obj.getInt("version");
 		        mApkId = obj.getInt("id");
 		        mFileName = UUID.randomUUID().toString() + ".apk";
-		        Log.i(TAG, "Latest version is: " + mLatestVersion);
-		        Log.i(TAG, "Old version is: " + AppUtil.getVersionCode(mContext));
 	        }
 		} catch (ConnectException cre) {
             Log.e(TAG, "Connection was refused", cre);
