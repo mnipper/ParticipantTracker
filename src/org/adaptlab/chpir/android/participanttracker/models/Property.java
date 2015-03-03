@@ -7,8 +7,10 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.ReceiveModel;
-import org.adaptlab.chpir.android.participanttracker.validators.ParticipantIdValidator;
+import org.adaptlab.chpir.android.participanttracker.validators.CaregiverIdValidator;
 import org.adaptlab.chpir.android.participanttracker.validators.CenterIdValidator;
+import org.adaptlab.chpir.android.participanttracker.validators.ChildIdValidator;
+import org.adaptlab.chpir.android.participanttracker.validators.ParticipantIdValidator;
 import org.adaptlab.chpir.android.participanttracker.validators.ValidationCallable;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +22,7 @@ public class Property extends ReceiveModel {
     private static final String TAG = "Property";
     
     public static enum PropertyType {STRING, DATE, INTEGER};
-    public static enum Validator {PARTICIPANT_ID, CENTER_ID};
+    public static enum Validator {PARTICIPANT_ID, CENTER_ID, CHILD_ID, CAREGIVER_ID};
 
     @Column(name = "RemoteId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long mRemoteId;
@@ -135,7 +137,11 @@ public class Property extends ReceiveModel {
         if (mValidator == Validator.PARTICIPANT_ID) {
             return new ParticipantIdValidator();
         } else if (mValidator == Validator.CENTER_ID) {
-              return new CenterIdValidator();
+            return new CenterIdValidator();
+        } else if (mValidator == Validator.CHILD_ID) {
+            return new ChildIdValidator();
+        } else if (mValidator == Validator.CAREGIVER_ID) {
+            return new CaregiverIdValidator();
         } else {
             return null;
         }
