@@ -40,7 +40,7 @@ public class SyncTablesTask extends AsyncTask<Void, Void, Void> {
 	protected void onPostExecute(Void param) {
     	new LogoutUserTask(mContext).execute();
     	((Activity) mContext).setResult(Activity.RESULT_OK);
-    	if (mProgressDialog.isShowing()) {
+    	if (mProgressDialog != null && mProgressDialog.isShowing()) {
     	    mProgressDialog.dismiss();
     	}
     	((Activity) mContext).finish();
