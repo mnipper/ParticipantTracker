@@ -1,8 +1,5 @@
 package org.adaptlab.chpir.android.participanttracker.validators;
 
-/**
- * Created by mn127 on 3/3/15.
- */
 public class CaregiverIdValidator extends ParticipantIdValidator {
 
     @Override
