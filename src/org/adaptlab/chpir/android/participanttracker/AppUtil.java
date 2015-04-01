@@ -1,19 +1,5 @@
 package org.adaptlab.chpir.android.participanttracker;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
-import org.adaptlab.chpir.android.participanttracker.models.AdminSettings;
-import org.adaptlab.chpir.android.participanttracker.models.Participant;
-import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
-import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
-import org.adaptlab.chpir.android.participanttracker.models.Property;
-import org.adaptlab.chpir.android.participanttracker.models.Relationship;
-import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
@@ -28,8 +14,22 @@ import android.util.Log;
 import com.activeandroid.ActiveAndroid;
 import com.crashlytics.android.Crashlytics;
 
+import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
+import org.adaptlab.chpir.android.participanttracker.models.AdminSettings;
+import org.adaptlab.chpir.android.participanttracker.models.Participant;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
+import org.adaptlab.chpir.android.participanttracker.models.Property;
+import org.adaptlab.chpir.android.participanttracker.models.Relationship;
+import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.util.List;
+import java.util.UUID;
+
 public class AppUtil {
-    private final static boolean REQUIRE_SECURITY_CHECKS = true;
+    private final static boolean REQUIRE_SECURITY_CHECKS = false;
 	private static final String TAG = "AppUtil";
 	private static final boolean SEED_DB = false;
 	public static String ADMIN_PASSWORD_HASH;
@@ -46,13 +46,16 @@ public class AppUtil {
 		ADMIN_PASSWORD_HASH = context.getResources().getString(R.string.admin_password_hash);
 		ACCESS_TOKEN = AdminSettings.getInstance().getApiKey();
 		
-		if (!BuildConfig.DEBUG)
-            Crashlytics.start(context);
-		
 		if (AdminSettings.getInstance().getDeviceIdentifier() == null) {
 			AdminSettings.getInstance().setDeviceIdentifier(
 					UUID.randomUUID().toString());
 		}
+		
+        if (!BuildConfig.DEBUG) {
+            Crashlytics.start(context);
+            Crashlytics.setUserIdentifier(AdminSettings.getInstance().getDeviceIdentifier());
+            Crashlytics.setString("device label", AdminSettings.getInstance().getDeviceLabel());
+        }
 
 		ActiveRecordCloudSync.setAccessToken(ACCESS_TOKEN);
 		ActiveRecordCloudSync.setVersionCode(AppUtil.getVersionCode(context));
