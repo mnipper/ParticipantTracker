@@ -1,5 +1,20 @@
 package org.adaptlab.chpir.android.participanttracker;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
+import org.adaptlab.chpir.android.participanttracker.models.AdminSettings;
+import org.adaptlab.chpir.android.participanttracker.models.DeviceSyncEntry;
+import org.adaptlab.chpir.android.participanttracker.models.Participant;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
+import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
+import org.adaptlab.chpir.android.participanttracker.models.Property;
+import org.adaptlab.chpir.android.participanttracker.models.Relationship;
+import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
@@ -14,34 +29,22 @@ import android.util.Log;
 import com.activeandroid.ActiveAndroid;
 import com.crashlytics.android.Crashlytics;
 
-import org.adaptlab.chpir.android.activerecordcloudsync.ActiveRecordCloudSync;
-import org.adaptlab.chpir.android.participanttracker.models.AdminSettings;
-import org.adaptlab.chpir.android.participanttracker.models.Participant;
-import org.adaptlab.chpir.android.participanttracker.models.ParticipantProperty;
-import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
-import org.adaptlab.chpir.android.participanttracker.models.Property;
-import org.adaptlab.chpir.android.participanttracker.models.Relationship;
-import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
-
-import java.util.List;
-import java.util.UUID;
-
 public class AppUtil {
     private final static boolean REQUIRE_SECURITY_CHECKS = false;
 	private static final String TAG = "AppUtil";
 	private static final boolean SEED_DB = false;
 	public static String ADMIN_PASSWORD_HASH;
 	public static String ACCESS_TOKEN;
+    private static Context mContext;
 
 	public static final void appInit(Context context) {
-		
 		if (AppUtil.REQUIRE_SECURITY_CHECKS) {
 			if (!AppUtil.hasPassedDeviceSecurityChecks(context)) {
 				return;
 			}
 		}
+
+        mContext = context;
 		
 		ADMIN_PASSWORD_HASH = context.getResources().getString(R.string.admin_password_hash);
 		ACCESS_TOKEN = AdminSettings.getInstance().getApiKey();
@@ -95,6 +98,7 @@ public class AppUtil {
 		ActiveRecordCloudSync.addSendReceiveTable("participants", Participant.class);
 		ActiveRecordCloudSync.addSendReceiveTable("participant_properties", ParticipantProperty.class);
 		ActiveRecordCloudSync.addSendReceiveTable("relationships", Relationship.class);
+        ActiveRecordCloudSync.addSendReceiveTable("device_sync_entries", DeviceSyncEntry.class);
 	}
 
 	@SuppressLint("UseValueOf")
@@ -180,5 +184,8 @@ public class AppUtil {
         }
         return false;
     }
-	
+
+    public static Context getContext() {
+        return mContext;
+    }
 }
