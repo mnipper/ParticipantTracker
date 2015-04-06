@@ -11,4 +11,5 @@ public abstract class SendReceiveModel extends Model {
     public abstract void setAsSent();
     public abstract void createObjectFromJSON(JSONObject jsonObject);
 	public abstract Long getRemoteId();
+	public abstract boolean isPersistent();
 }

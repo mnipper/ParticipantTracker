@@ -30,7 +30,7 @@ public class HttpPushr {
         mSendTableClass = sendTableClass;
         mRemoteTableName = remoteTableName;
     }
-
+    
     public void push() {
         if (ActiveRecordCloudSync.getEndPoint() == null) {
             Log.i(TAG, "ActiveRecordCloudSync end point is not set!");
@@ -39,7 +39,22 @@ public class HttpPushr {
 
         List<? extends SendReceiveModel> allElements = getElements();
 
-        for (SendReceiveModel element : allElements) {
+        try {
+            if (isPersistent()) {
+                for (SendReceiveModel element : allElements) {
+                    sendData(element);
+                }
+            } else {
+                sendData(mSendTableClass.newInstance());   
+            }
+        } catch (InstantiationException ie) {
+            Log.e(TAG, "InstantiationException: " + ie);
+        } catch (IllegalAccessException ie) {
+            Log.e(TAG, "IllegalAccessException: " + ie);
+        }
+    }
+
+    public void sendData(SendReceiveModel element) {
             HttpClient client = new DefaultHttpClient();
             HttpConnectionParams
                     .setConnectionTimeout(client.getParams(), 10000); // Timeout limit
@@ -80,11 +95,15 @@ public class HttpPushr {
                 }
 
             }
-        }
 
     }
 
 	public List<? extends SendReceiveModel> getElements() {
 		return new Select().from(mSendTableClass).orderBy("Id ASC").execute();
+	}
+	
+	private boolean isPersistent() throws InstantiationException, IllegalAccessException {
+	    SendReceiveModel sendModel = mSendTableClass.newInstance();
+        return sendModel.isPersistent();
 	}
 }

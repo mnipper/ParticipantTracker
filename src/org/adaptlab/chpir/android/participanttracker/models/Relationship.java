@@ -39,6 +39,11 @@ public class Relationship extends SendReceiveModel {
         mUUID = UUID.randomUUID().toString();
         mRelationshipType = relationshipType;
     }
+    
+    @Override
+    public boolean isPersistent() {
+        return true;
+    }
 
     @Override
     public JSONObject toJSON() {

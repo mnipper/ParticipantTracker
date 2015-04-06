@@ -40,6 +40,11 @@ public class Participant extends SendReceiveModel {
         mUUID = UUID.randomUUID().toString();
         mSent = false;
     }
+    
+    @Override
+    public boolean isPersistent() {
+        return true;
+    }
 
     @Override
     public JSONObject toJSON() {

@@ -44,6 +44,11 @@ public class ParticipantProperty extends SendReceiveModel {
         mUUID = UUID.randomUUID().toString();
     }
     
+    @Override
+    public boolean isPersistent() {
+        return true;
+    }
+    
     private void setParticipant(Participant participant) {
     	mParticipant = participant;
     }
