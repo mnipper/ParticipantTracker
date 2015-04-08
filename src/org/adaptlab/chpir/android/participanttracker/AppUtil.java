@@ -98,7 +98,7 @@ public class AppUtil {
 		ActiveRecordCloudSync.addSendReceiveTable("participants", Participant.class);
 		ActiveRecordCloudSync.addSendReceiveTable("participant_properties", ParticipantProperty.class);
 		ActiveRecordCloudSync.addSendReceiveTable("relationships", Relationship.class);
-        ActiveRecordCloudSync.addSendReceiveTable("device_sync_entries", DeviceSyncEntry.class);
+		ActiveRecordCloudSync.addSendTable("device_sync_entries", DeviceSyncEntry.class);
 	}
 
 	@SuppressLint("UseValueOf")

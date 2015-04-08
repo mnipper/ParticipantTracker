@@ -3,6 +3,7 @@ package org.adaptlab.chpir.android.participanttracker.models;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.adaptlab.chpir.android.activerecordcloudsync.SendModel;
 import org.adaptlab.chpir.android.activerecordcloudsync.SendReceiveModel;
 import org.adaptlab.chpir.android.participanttracker.AppUtil;
 import org.json.JSONException;
@@ -10,7 +11,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public class DeviceSyncEntry extends SendReceiveModel {
+public class DeviceSyncEntry extends SendModel {
     private static final String TAG = "DeviceSyncEntry";
 
     public DeviceSyncEntry() { }
@@ -26,9 +27,11 @@ public class DeviceSyncEntry extends SendReceiveModel {
             jsonObject.put("current_version", AppUtil.getVersionCode(AppUtil.getContext()));
             jsonObject.put("current_language", Locale.getDefault().getDisplayLanguage());
             jsonObject.put("device_uuid", AdminSettings.getInstance().getDeviceIdentifier());
-            jsonObject.put("api_key", AdminSettings.getInstance().getApiKey());
+            jsonObject.put("device_label", AdminSettings.getInstance().getDeviceLabel());
             jsonObject.put("timezone", TimeZone.getDefault().getDisplayName() + " " + TimeZone.getDefault().getID());
-
+            jsonObject.put("participant_count", Participant.getCount());
+            jsonObject.put("participant_types", ParticipantType.getTypeLabels().toString());
+            
             json.put("device_sync_entry", jsonObject);
         } catch (JSONException je) {
             Log.e(TAG, "JSON exception", je);
@@ -48,9 +51,6 @@ public class DeviceSyncEntry extends SendReceiveModel {
 
     @Override
     public boolean isPersistent() { return false; }
-
-    @Override
-    public void createObjectFromJSON(JSONObject jsonObject) { }
 
     @Override
     public Long getRemoteId() {

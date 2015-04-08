@@ -1,5 +1,6 @@
 package org.adaptlab.chpir.android.participanttracker.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.ReceiveModel;
@@ -96,6 +97,16 @@ public class ParticipantType extends ReceiveModel {
     
     public void setLabel(String label) {
         mLabel = label;
+    }
+    
+    public static List<String> getTypeLabels() {
+        List<String> types = new ArrayList<String>();
+        
+        for (ParticipantType participantType : ParticipantType.getAll()) {
+            types.add(participantType.getLabel());
+        }
+        
+        return types;
     }
     
     private void setRemoteId(Long remoteId) {

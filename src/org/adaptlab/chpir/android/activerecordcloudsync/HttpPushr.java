@@ -22,11 +22,11 @@ import com.activeandroid.query.Select;
 
 public class HttpPushr {
     private static final String TAG = "HttpPushr";
-    private Class<? extends SendReceiveModel> mSendTableClass;
+    private Class<? extends SendModel> mSendTableClass;
     private String mRemoteTableName;
 
     public HttpPushr(String remoteTableName,
-            Class<? extends SendReceiveModel> sendTableClass) {
+            Class<? extends SendModel> sendTableClass) {
         mSendTableClass = sendTableClass;
         mRemoteTableName = remoteTableName;
     }
@@ -54,7 +54,7 @@ public class HttpPushr {
         }
     }
 
-    public void sendData(SendReceiveModel element) {
+    public void sendData(SendModel element) {
             HttpClient client = new DefaultHttpClient();
             HttpConnectionParams
                     .setConnectionTimeout(client.getParams(), 10000); // Timeout limit
@@ -103,7 +103,7 @@ public class HttpPushr {
 	}
 	
 	private boolean isPersistent() throws InstantiationException, IllegalAccessException {
-	    SendReceiveModel sendModel = mSendTableClass.newInstance();
+	    SendModel sendModel = mSendTableClass.newInstance();
         return sendModel.isPersistent();
 	}
 }
