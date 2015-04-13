@@ -12,8 +12,7 @@ import org.adaptlab.chpir.android.participanttracker.models.ParticipantType;
 import org.adaptlab.chpir.android.participanttracker.models.Property;
 import org.adaptlab.chpir.android.participanttracker.models.Relationship;
 import org.adaptlab.chpir.android.participanttracker.models.RelationshipType;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
+import org.adaptlab.chpir.android.vendor.BCrypt;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
@@ -30,7 +29,7 @@ import com.activeandroid.ActiveAndroid;
 import com.crashlytics.android.Crashlytics;
 
 public class AppUtil {
-    private final static boolean REQUIRE_SECURITY_CHECKS = false;
+    private final static boolean REQUIRE_SECURITY_CHECKS = true;
 	private static final String TAG = "AppUtil";
 	private static final boolean SEED_DB = false;
 	public static String ADMIN_PASSWORD_HASH;
@@ -158,9 +157,8 @@ public class AppUtil {
 		}
 	}
 
-	public static boolean checkAdminPassword(String string) {
-		String hash = new String(Hex.encodeHex(DigestUtils.sha256(string)));
-		return hash.equals(ADMIN_PASSWORD_HASH);
+	public static boolean checkAdminPassword(String password) {
+		return BCrypt.checkpw(password, ADMIN_PASSWORD_HASH);
 	}
 
 	public static int getVersionCode(Context context) {
