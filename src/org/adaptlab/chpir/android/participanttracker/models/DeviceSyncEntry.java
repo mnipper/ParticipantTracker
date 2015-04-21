@@ -4,20 +4,21 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.SendModel;
-import org.adaptlab.chpir.android.activerecordcloudsync.SendReceiveModel;
 import org.adaptlab.chpir.android.participanttracker.AppUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.activeandroid.annotation.Table;
-
 import android.util.Log;
+
+import com.activeandroid.annotation.Table;
 
 @Table(name = "DeviceSyncEntry")
 public class DeviceSyncEntry extends SendModel {
     private static final String TAG = "DeviceSyncEntry";
 
-    public DeviceSyncEntry() { }
+    public DeviceSyncEntry() { 
+    	super();
+    }
 
     @Override
     public JSONObject toJSON() {
