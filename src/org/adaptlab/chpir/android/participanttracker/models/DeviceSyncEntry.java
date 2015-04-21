@@ -9,8 +9,11 @@ import org.adaptlab.chpir.android.participanttracker.AppUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.activeandroid.annotation.Table;
+
 import android.util.Log;
 
+@Table(name = "DeviceSyncEntry")
 public class DeviceSyncEntry extends SendModel {
     private static final String TAG = "DeviceSyncEntry";
 
