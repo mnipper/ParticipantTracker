@@ -49,26 +49,22 @@ public class ApkUpdateTask extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPostExecute(Void param) {
-		if (mLatestVersion != null) {
-			if (mLatestVersion > AppUtil.getVersionCode(mContext)) {
-		        new AlertDialog.Builder(mContext)
-				.setMessage(R.string.new_apk)
-				.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() { 
-					public void onClick(DialogInterface dialog, int button) {
-						new DownloadApkTask().execute();
-					}
-				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-	                   public void onClick(DialogInterface dialog, int id) {
-	                	   new SyncTablesTask(mContext).execute();
-	                   }
-	            }).show();
-	        } else {
-	        	new SyncTablesTask(mContext).execute();
-	        }
+		if (mLatestVersion == null || mLatestVersion <= AppUtil.getVersionCode(mContext)) {
+			new SyncTablesTask(mContext).execute();
 		} else {
-        	new SyncTablesTask(mContext).execute();
-        }
+			new AlertDialog.Builder(mContext)
+			.setMessage(R.string.new_apk)
+			.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() { 
+				public void onClick(DialogInterface dialog, int button) {
+					new DownloadApkTask().execute();
+				}
+			})
+			.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int id) {
+	            	   new SyncTablesTask(mContext).execute();
+	               }
+	        }).show();
+		}
 	}
 
 	private void checkLatestApk() {
