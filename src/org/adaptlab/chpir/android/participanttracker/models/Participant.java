@@ -287,8 +287,8 @@ public class Participant extends SendReceiveModel {
         //Add Survey label
         for (Property property : this.getProperties()) {
         	if (property.getUseAsLabel() && this.hasParticipantProperty(property)) {
-        		jsonObject.put("survey_label", this.getParticipantProperty(property).getValue());
-            }  
+        		jsonObject.put("survey_label", this.getParticipantType().getLabel() + " " + this.getParticipantProperty(property).getValue());
+            }
         }
         
         return jsonObject.toString();
