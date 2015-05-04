@@ -19,7 +19,7 @@ public class SyncTablesTask extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPreExecute() {
-	    if (! ((Activity) mContext).isFinishing()) {
+	    if (mContext != null && !((Activity) mContext).isFinishing()) {
     		mProgressDialog = ProgressDialog.show(
     				mContext, 
     				mContext.getString(R.string.participants_loading_header), 
@@ -40,7 +40,7 @@ public class SyncTablesTask extends AsyncTask<Void, Void, Void> {
 	protected void onPostExecute(Void param) {
     	new LogoutUserTask(mContext).execute();
     	((Activity) mContext).setResult(Activity.RESULT_OK);
-    	if (mProgressDialog != null && mProgressDialog.isShowing()) {
+    	if (mProgressDialog != null && mProgressDialog.isShowing() && !((Activity) mContext).isDestroyed()) {
     	    mProgressDialog.dismiss();
     	}
     	((Activity) mContext).finish();
