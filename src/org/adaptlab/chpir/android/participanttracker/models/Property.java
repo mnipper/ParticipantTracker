@@ -40,6 +40,8 @@ public class Property extends ReceiveModel {
     private Validator mValidator;
     @Column(name = "IncludeInMetadata")
     private boolean mIncludeInMetadata;
+    @Column(name = "UseToSort")
+    private boolean mUseToSort;
     
     public Property() {
         super();
@@ -73,6 +75,7 @@ public class Property extends ReceiveModel {
             property.setUseAsLabel(jsonObject.getBoolean("use_as_label"));
             property.setValidator(jsonObject.getString("validator"));
             property.setIncludeInMetadata(jsonObject.getBoolean("include_in_metadata"));
+            property.setUseToSort(jsonObject.getBoolean("sorting_property"));
             if (jsonObject.isNull("deleted_at")) {
             	property.save();
             } else {
@@ -155,6 +158,10 @@ public class Property extends ReceiveModel {
         return mIncludeInMetadata;
     }
     
+    public boolean isUsedToSort() {
+    	return mUseToSort;
+    }
+    
     private void setLabel(String label) {
         mLabel = label;
     }
@@ -190,5 +197,9 @@ public class Property extends ReceiveModel {
     
     private void setIncludeInMetadata(boolean include) {
         mIncludeInMetadata = include;
+    }
+    
+    private void setUseToSort(boolean sort) {
+    	mUseToSort = sort;
     }
 }
