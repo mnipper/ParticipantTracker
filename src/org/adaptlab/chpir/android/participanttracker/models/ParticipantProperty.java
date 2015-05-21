@@ -1,5 +1,6 @@
 package org.adaptlab.chpir.android.participanttracker.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.adaptlab.chpir.android.activerecordcloudsync.SendReceiveModel;
@@ -131,6 +132,10 @@ public class ParticipantProperty extends SendReceiveModel {
     
     public static ParticipantProperty findByUUID(String uuid) {
     	return new Select().from(ParticipantProperty.class).where("UUID = ?", uuid).executeSingle();
+    }
+    
+    public static List<ParticipantProperty> getAllByParticipant(Participant participant) {
+    	return new Select().from(ParticipantProperty.class).where("Participant = ?", participant.getId()).execute();
     }
 
 	@Override

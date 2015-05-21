@@ -21,9 +21,9 @@ public class Relationship extends SendReceiveModel {
     private Long mRemoteId;
     @Column(name = "SentToRemote")
     private boolean mSent;
-    @Column(name = "ParticpantOwner")
+    @Column(name = "ParticpantOwner", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private Participant mParticipantOwner;
-    @Column(name = "ParticipantRelated")
+    @Column(name = "ParticipantRelated", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private Participant mParticipantRelated;
     @Column(name = "UUID")
     private String mUUID;
@@ -112,6 +112,10 @@ public class Relationship extends SendReceiveModel {
     
     public static List<Relationship> getAll() {
         return new Select().from(Relationship.class).orderBy("Id ASC").execute();
+    }
+    
+    public static List<Relationship> getAllByParticipant(Participant participant) {
+    	return new Select().from(Relationship.class).where("ParticpantOwner = ? OR ParticipantRelated = ?", participant.getId(), participant.getId()).execute();
     }
 
     @Override

@@ -266,6 +266,14 @@ public class Participant extends SendReceiveModel {
 				Log.i(TAG, "deleted participant: " + jsonObject.toString());
 				Participant p = Participant.findByUUID(uuid);
 				if (p != null) {
+					List<ParticipantProperty> properties = ParticipantProperty.getAllByParticipant(p);
+					List<Relationship> relationships = Relationship.getAllByParticipant(p);
+					for(ParticipantProperty property : properties) {
+						property.delete();
+					}
+					for(Relationship relationship : relationships) {
+						relationship.delete();
+					}
 					p.delete();
 				}
 			}
@@ -296,8 +304,7 @@ public class Participant extends SendReceiveModel {
         
         // Add metadata for relationships
         for (Relationship relationship : getRelationships()) {
-            jsonObject.put(relationship.getRelationshipType().getLabel(), relationship.getParticipantRelated().getUUID());
-            
+        	jsonObject.put(relationship.getRelationshipType().getLabel(), relationship.getParticipantRelated().getUUID());            
             for (ParticipantProperty participantProperty : getMetadataParticipantProperties(relationship.getParticipantRelated())) {
                 jsonObject.put(relationship.getRelationshipType().getLabel() + " - " + participantProperty.getProperty().getLabel(), participantProperty.getValue());
             }
