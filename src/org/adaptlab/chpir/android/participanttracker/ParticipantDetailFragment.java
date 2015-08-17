@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.adaptlab.chpir.android.participanttracker.Receivers.InstrumentListReceiver;
 import org.adaptlab.chpir.android.participanttracker.Receivers.ReceivedInstrumentDetails;
@@ -163,13 +162,9 @@ public class ParticipantDetailFragment extends Fragment {
     }
     
     private void newSurvey() {
-        if (AppUtil.checkForRunningProcess(getActivity(), SURVEY_PACKAGE_NAME)) {
             Intent i = new Intent();
             i.setAction(InstrumentListReceiver.GET_INSTRUMENT_LIST);
             getActivity().getApplicationContext().sendBroadcast(i);
-        } else {
-            Toast.makeText(getActivity(), R.string.ensure_survey_open, Toast.LENGTH_LONG).show();
-        }
     }
     
     /*
