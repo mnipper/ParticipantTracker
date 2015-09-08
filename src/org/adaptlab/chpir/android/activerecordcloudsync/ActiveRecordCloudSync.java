@@ -1,17 +1,19 @@
 package org.adaptlab.chpir.android.activerecordcloudsync;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import android.content.Context;
+import android.util.Log;
 
 import org.adaptlab.chpir.android.participanttracker.R;
+import org.adaptlab.chpir.android.participanttracker.models.AdminSettings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.util.Log;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ActiveRecordCloudSync {
     private static final String TAG="ActiveRecordCloudSync";
@@ -27,7 +29,8 @@ public class ActiveRecordCloudSync {
     private static int mVersionCode;        // App version code from Manifest
     private static String mAuthToken;
     private static String mUserEmail;
-    
+    private static String mLastSyncTime;
+    private static int mFetchCount;
     /**
      * Add a ReceiveTable.  A ReceiveTable is an active record model class that extends the
      * ReceiveModel abstract class.
@@ -41,6 +44,10 @@ public class ActiveRecordCloudSync {
     
     public static Map<String, Class<? extends ReceiveModel>> getReceiveTables() {
         return mReceiveTables;
+    }
+
+    public static Map<String, Class<? extends SendReceiveModel>> getSendReceiveTables() {
+        return mSendReceiveTables;
     }
     
     public static void addSendReceiveTable(String tableName, Class<? extends SendReceiveModel> sendTable) {
@@ -62,7 +69,9 @@ public class ActiveRecordCloudSync {
     public static void syncTables(Context context) {
         
     	NetworkNotificationUtils.showNotification(context, android.R.drawable.stat_sys_download, R.string.sync_notification_text);
-        
+        Date currentTime = new Date();
+        ActiveRecordCloudSync.setLastSyncTime(Long.toString(currentTime.getTime()));
+        ActiveRecordCloudSync.setFetchCount(0);
     	for (Map.Entry<String, Class<? extends ReceiveModel>> entry : mReceiveTables.entrySet()) {
             Log.i(TAG, "Syncing " + entry.getValue() + " from remote table " + entry.getKey());
             HttpFetchr httpFetchr = new HttpFetchr(entry.getKey(), entry.getValue());
@@ -138,7 +147,23 @@ public class ActiveRecordCloudSync {
     public static void setVersionCode(int code) {
         mVersionCode = code;
     }
-    
+
+    public static void setFetchCount(int count) {
+        mFetchCount = count;
+    }
+
+    public static int getFetchCount() {
+        return mFetchCount;
+    }
+
+    public static String getLastSyncTime() {
+        return mLastSyncTime;
+    }
+
+    private static void setLastSyncTime(String time) {
+        mLastSyncTime = time;
+    }
+
     /*
      * Version code from AndroidManifest
      */
@@ -153,7 +178,8 @@ public class ActiveRecordCloudSync {
      */
     public static String getParams() {
         return "?access_token=" + getAccessToken() + "&version_code=" + getVersionCode() 
-        		+ "&auth_token=" + getAuthToken() +"&user_email=" + getUserEmail();
+        		+ "&auth_token=" + getAuthToken() +"&user_email=" + getUserEmail()
+                + "&last_sync_time=" + AdminSettings.getInstance().getLastSyncTime();
     }
     
     public static void setAuthToken(String token) {
@@ -194,4 +220,13 @@ public class ActiveRecordCloudSync {
             return -1;
         }
     }
+
+    public static void recordLastSyncTime() {
+        int rNum = ActiveRecordCloudSync.getReceiveTables().size();
+        int srNum = ActiveRecordCloudSync.getSendReceiveTables().size();
+        if (ActiveRecordCloudSync.getFetchCount() == (rNum + srNum)) {
+            AdminSettings.getInstance().setLastSyncTime(ActiveRecordCloudSync.getLastSyncTime());
+        }
+    }
+
 }

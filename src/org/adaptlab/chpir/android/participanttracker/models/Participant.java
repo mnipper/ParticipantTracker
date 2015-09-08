@@ -1,18 +1,18 @@
 package org.adaptlab.chpir.android.participanttracker.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.adaptlab.chpir.android.activerecordcloudsync.SendReceiveModel;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+
+import org.adaptlab.chpir.android.activerecordcloudsync.SendReceiveModel;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Table(name = "Participant")
 public class Participant extends SendReceiveModel {
@@ -27,7 +27,7 @@ public class Participant extends SendReceiveModel {
     private String mUUID;
     @Column(name = "RemoteId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private Long mRemoteId;
-    
+
     public Participant() {
         super();
         mUUID = UUID.randomUUID().toString();
@@ -221,6 +221,7 @@ public class Participant extends SendReceiveModel {
     @Override
     public void setAsSent() {
         mSent = true;
+        save();
     }
     
     public List<Property> getProperties() {

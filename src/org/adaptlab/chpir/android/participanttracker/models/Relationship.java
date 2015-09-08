@@ -1,17 +1,17 @@
 package org.adaptlab.chpir.android.participanttracker.models;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.adaptlab.chpir.android.activerecordcloudsync.SendReceiveModel;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+
+import org.adaptlab.chpir.android.activerecordcloudsync.SendReceiveModel;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+import java.util.UUID;
 
 @Table(name = "Relationship")
 public class Relationship extends SendReceiveModel {
@@ -29,7 +29,7 @@ public class Relationship extends SendReceiveModel {
     private String mUUID;
     @Column(name = "RelationshipType")
     private RelationshipType mRelationshipType;
-    
+
     public Relationship() {
         super();
     }
@@ -131,6 +131,7 @@ public class Relationship extends SendReceiveModel {
     @Override
     public void setAsSent() {
         mSent = true;
+        save();
     }
 
     @Override
@@ -173,4 +174,5 @@ public class Relationship extends SendReceiveModel {
     public void setRelationshipType(RelationshipType relationshipType) {
         mRelationshipType = relationshipType;
     }
+
 }

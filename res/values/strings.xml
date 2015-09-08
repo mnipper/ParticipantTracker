@@ -30,7 +30,7 @@
     <string name="system_information">System Information</string>
     <string name="version_code">Version Code: </string>
     <string name="participants_loading_header">Loading Participants</string>
-    <string name="participants_loading_message">Pleasing wait a moment</string>
+    <string name="participants_loading_message">Please wait a moment</string>
     <string name="login_button">Login</string>
     <string name="login_label_message">Please login in order to sync participants</string>
     <string name="email_password_mismatch">Invalid email and password combination!</string>

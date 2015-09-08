@@ -23,6 +23,8 @@ public class AdminSettings extends Model {
     private String mApiKey;
     @Column(name = "DeviceLabel")
     private String mDeviceLabel;
+    @Column(name = "LastSyncTime")
+    private String mLastSyncTime;
     
     private static final String TAG = "AdminSettings";
 	private static AdminSettings adminSettings;
@@ -108,5 +110,12 @@ public class AdminSettings extends Model {
     public String getDeviceLabel() {
         return mDeviceLabel;
     }
-    
+
+    public void setLastSyncTime(String time) { mLastSyncTime = time; save(); }
+
+    public String getLastSyncTime() {
+        if (mLastSyncTime == null) return "";
+        return mLastSyncTime;
+    }
+
 }
