@@ -45,4 +45,8 @@
     <string name="invalid_validator">This is invalid</string>
     <string name="invalid_validator_toast">is invalid!</string>
     <string name="ensure_survey_open">Please ensure the Survey application is open!</string>
+    <string name="neighbor">Neighbor</string>
+    <string name="child">Child</string>
+    <string name="caregiver">Caregiver</string>
+    <string name="center">Center</string>
 </resources>

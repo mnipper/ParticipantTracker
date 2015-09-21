@@ -1,17 +1,18 @@
 package org.adaptlab.chpir.android.participanttracker.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.adaptlab.chpir.android.activerecordcloudsync.ReceiveModel;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+
+import org.adaptlab.chpir.android.activerecordcloudsync.ReceiveModel;
+import org.adaptlab.chpir.android.participanttracker.AppUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "ParticipantType")
 public class ParticipantType extends ReceiveModel {
@@ -83,7 +84,12 @@ public class ParticipantType extends ReceiveModel {
      */
     
     public String getLabel() {
-        return mLabel;
+        if (mLabel == null) return "";
+        int labelId = AppUtil.getContext().getResources().getIdentifier(mLabel.toLowerCase(), "string", AppUtil.getContext().getPackageName());
+        if (labelId == 0)
+            return mLabel;
+        else
+            return AppUtil.getContext().getResources().getString(labelId);
     }
     
     public Long getRemoteId() {
